@@ -139,9 +139,9 @@ button { cursor: pointer; }
   color: var(--kalava);
   text-decoration: none;
   font-family: "Darker Grotesque", "Source Sans 3", sans-serif;
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: -0.03em;
   line-height: 1;
 }
 
@@ -287,14 +287,6 @@ section { padding: 108px 0; }
   padding-top: 48px;
   border-top: 1px solid var(--line);
 }
-.statement p {
-  font-family: "Source Serif 4", Georgia, serif;
-  font-size: clamp(26px, 3.4vw, 42px);
-  line-height: 1.2;
-  letter-spacing: -0.03em;
-  max-width: 22ch;
-  margin: 0 0 20px;
-}
 
 /* Meet El */
 .meet {
@@ -310,7 +302,7 @@ section { padding: 108px 0; }
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  padding-top: 6px;
+  padding-top: 42px;
 }
 .el-viewport {
   width: 320px;
@@ -355,11 +347,11 @@ section { padding: 108px 0; }
 .why-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 28px 64px;
-  margin-top: 56px;
-  max-width: 920px;
+  gap: 24px 32px;
+  margin-top: 36px;
 }
 .why-grid h3 { font-size: 22px; margin-bottom: 8px; }
+.meet-note { margin-top: 28px; }
 
 .el-spinner {
   transform-box: fill-box;
