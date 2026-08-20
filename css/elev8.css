@@ -29,6 +29,7 @@ html, body {
   line-height: 1.5;
 }
 img, svg { display: block; max-width: 100%; }
+[hidden] { display: none !important; }
 button, a { font: inherit; }
 button { cursor: pointer; }
 
@@ -312,7 +313,7 @@ section { padding: 108px 0; }
 }
 .why-grid h3 { font-size: 22px; margin-bottom: 8px; }
 
-.el-spinner { transform-origin: 198px 118px; animation: spin 1.4s linear infinite; }
+.el-spinner { transform-origin: 198px 120px; animation: spin 1.4s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* Panels */

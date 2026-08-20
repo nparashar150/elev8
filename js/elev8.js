@@ -33,8 +33,8 @@ async function showPose(pose) {
   const response = await fetch(poses[pose]);
   const markup = await response.text();
   const wrapper = elFigure.parentElement;
-  const existing = wrapper.querySelector("svg.el-live-svg");
-  existing?.remove();
+  wrapper.querySelectorAll("svg.el-live-svg").forEach((node) => node.remove());
+  elFigure.hidden = true;
   const slot = document.createElement("div");
   slot.innerHTML = markup.trim();
   const svg = slot.querySelector("svg");
