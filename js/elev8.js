@@ -1,23 +1,19 @@
 const preload = document.querySelector(".preload");
 const nav = document.querySelector(".nav");
-const elFigure = document.getElementById("el-live");
-const poseButtons = document.querySelectorAll("[data-pose]");
 const tiles = document.querySelectorAll(".tile");
 const compare = document.querySelector(".compare");
 const compareRange = document.querySelector(".compare-range");
-
-const poses = {
-  Neutral: "assets/el-neutral.svg",
-  Waiting: "assets/el-waiting.svg",
-  Thinking: "assets/el-thinking.svg",
-  Celebrating: "assets/el-thumbs.svg",
-};
+const viewport = document.querySelector(".el-viewport");
+const poses = [...document.querySelectorAll(".el-pose")];
+const poseLabel = document.querySelector(".el-pose-label");
 
 function finishPreload() {
   preload?.classList.add("is-done");
 }
 
-if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+if (reduceMotion) {
   finishPreload();
 } else {
   window.setTimeout(finishPreload, 1650);
@@ -27,45 +23,45 @@ window.addEventListener("scroll", () => {
   nav?.classList.toggle("is-scrolled", window.scrollY > 8);
 }, { passive: true });
 
-async function showPose(pose) {
-  if (!elFigure || !poses[pose]) return;
-  elFigure.alt = `El in ${pose.toLowerCase()} pose`;
-  const response = await fetch(poses[pose]);
-  const markup = await response.text();
-  const wrapper = elFigure.parentElement;
-  wrapper.querySelectorAll("svg.el-live-svg").forEach((node) => node.remove());
-  elFigure.hidden = true;
-  const slot = document.createElement("div");
-  slot.innerHTML = markup.trim();
-  const svg = slot.querySelector("svg");
-  if (svg) {
-    svg.classList.add("el-live-svg");
-    svg.setAttribute("role", "img");
-    svg.setAttribute("aria-label", elFigure.alt);
-    elFigure.hidden = true;
-    wrapper.appendChild(svg);
-  } else {
-    elFigure.hidden = false;
-    elFigure.src = poses[pose];
+function setPose(index) {
+  poses.forEach((pose, i) => pose.classList.toggle("is-active", i === index));
+  if (poseLabel && poses[index]) {
+    poseLabel.textContent = poses[index].dataset.pose;
   }
 }
 
-poseButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const pose = button.dataset.pose;
-    poseButtons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
-    showPose(pose);
-  });
-});
+let cycling = false;
+
+function startPoseCycle() {
+  if (cycling || !poses.length || reduceMotion) return;
+  cycling = true;
+  window.setTimeout(() => {
+    let index = 0;
+    window.setInterval(() => {
+      index = (index + 1) % poses.length;
+      setPose(index);
+    }, 2400);
+  }, 1200);
+}
+
+if (viewport && "IntersectionObserver" in window) {
+  const intro = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      viewport.classList.add("is-in");
+      startPoseCycle();
+      intro.disconnect();
+    });
+  }, { threshold: 0.45 });
+  intro.observe(viewport);
+} else {
+  viewport?.classList.add("is-in");
+  startPoseCycle();
+}
 
 tiles.forEach((tile) => {
   tile.addEventListener("click", () => {
-    const alreadyOpen = tile.classList.contains("is-open");
-    if (alreadyOpen) {
-      tile.classList.remove("is-open");
-      return;
-    }
-    tile.classList.add("is-open");
+    tile.classList.toggle("is-open");
   });
 });
 
