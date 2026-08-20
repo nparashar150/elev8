@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 300" fill="none" aria-hidden="true">
+  <defs>
+    <clipPath id="el-thumbs-clip">
+      <ellipse cx="110" cy="272" rx="92" ry="28"/>
+      <rect x="0" y="0" width="220" height="272"/>
+    </clipPath>
+  </defs>
+  <ellipse cx="110" cy="272" rx="92" ry="28" fill="#4A3B3F"/>
+  <g clip-path="url(#el-thumbs-clip)">
+    <path d="M88 128 C84 128 72 90 74 48 C75 28 88 18 98 30 C106 40 108 74 106 128 C104 136 94 136 88 128Z" fill="#FBF3EC" stroke="#E8A79C" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M132 128 C136 128 148 90 146 48 C145 28 132 18 122 30 C114 40 112 74 114 128 C116 136 126 136 132 128Z" fill="#FBF3EC" stroke="#E8A79C" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M74 148 C74 120 90 104 110 104 C130 104 146 120 146 148 C146 176 132 196 110 196 C88 196 74 176 74 148Z" fill="#FBF3EC" stroke="#E8A79C" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M88 192 C78 214 76 244 80 276 L140 276 C144 244 142 214 132 192" fill="#FBF3EC" stroke="#E8A79C" stroke-width="7" stroke-linejoin="round"/>
+  </g>
+  <!-- proud, warm eyes -->
+  <path d="M94 146 C97 141 103 141 106 146" stroke="#E8A79C" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+  <path d="M114 146 C117 141 123 141 126 146" stroke="#E8A79C" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+  <circle cx="110" cy="160" r="3.8" fill="#E8A79C"/>
+  <!-- left paw on rim -->
+  <path d="M52 262 C46 262 42 254 48 248 C54 242 66 248 68 256 C70 264 60 268 52 262Z" fill="#FBF3EC" stroke="#E8A79C" stroke-width="6" stroke-linejoin="round"/>
+  <!-- right arm + thumbs up, fully emerged -->
+  <path d="M146 188 C162 176 176 188 172 206 C168 220 156 226 146 220" fill="#FBF3EC" stroke="#E8A79C" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M168 176 C168 160 176 150 186 152 C196 154 200 166 194 178 C190 186 180 188 172 184" fill="#FBF3EC" stroke="#E8A79C" stroke-width="6.5" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 260" fill="none" aria-hidden="true">
+  <defs>
+    <clipPath id="el-waiting-clip">
+      <ellipse cx="100" cy="232" rx="86" ry="26"/>
+      <rect x="0" y="0" width="200" height="232"/>
+    </clipPath>
+  </defs>
+  <ellipse cx="100" cy="232" rx="86" ry="26" fill="#4A3B3F"/>
+  <g clip-path="url(#el-waiting-clip)">
+    <path d="M78 108 C74 108 62 72 64 34 C65 16 78 8 88 18 C96 26 98 58 96 108 C94 116 84 116 78 108Z" fill="#FBF3EC" stroke="#E8A79C" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M122 108 C126 108 138 72 136 34 C135 16 122 8 112 18 C104 26 102 58 104 108 C106 116 116 116 122 108Z" fill="#FBF3EC" stroke="#E8A79C" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M64 128 C64 102 80 88 100 88 C120 88 136 102 136 128 C136 154 122 172 100 172 C78 172 64 154 64 128Z" fill="#FBF3EC" stroke="#E8A79C" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M78 168 C70 186 68 214 72 236 L128 236 C132 214 130 186 122 168" fill="#FBF3EC" stroke="#E8A79C" stroke-width="7" stroke-linejoin="round"/>
+  </g>
+  <ellipse cx="88" cy="128" rx="5.5" ry="3.2" fill="#E8A79C"/>
+  <ellipse cx="112" cy="128" rx="5.5" ry="3.2" fill="#E8A79C"/>
+  <circle cx="100" cy="140" r="3.6" fill="#E8A79C"/>
+  <path d="M48 222 C42 222 38 214 44 208 C50 202 62 208 64 216 C66 224 56 228 48 222Z" fill="#FBF3EC" stroke="#E8A79C" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M152 222 C158 222 162 214 156 208 C150 202 138 208 136 216 C134 224 144 228 152 222Z" fill="#FBF3EC" stroke="#E8A79C" stroke-width="6" stroke-linejoin="round"/>
+  <!-- separate petal spinner, not part of her body -->
+  <g transform="translate(198 118)" class="el-spinner">
+    <circle cx="0" cy="0" r="16" stroke="#E8A79C" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="28 72" fill="none"/>
+  </g>
+</svg>
