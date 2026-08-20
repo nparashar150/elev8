@@ -1,13 +1,13 @@
 # Elev8
 
-Pitch landing page prototype for Health Centric → Elev8.
+Pitch site for Health Centric → Elev8.
 
-Open `index.html` locally or serve the folder:
+Live: https://nparashar150.github.io/elev8/
+
+Pushes to `main` go live via GitHub Pages.
+
+Local:
 
 ```bash
-python3 -m http.server 4173
+python3 -m http.server 4173 --bind 0.0.0.0
 ```
-
-Then visit `http://localhost:4173`.
-
-Copy, character rules, and section order follow `assets/elev8-landing-page-final.pdf` and `assets/el-character-bible.pdf`.
