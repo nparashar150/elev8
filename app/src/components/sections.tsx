@@ -1,9 +1,8 @@
 import type { ReactNode } from "react";
-import type { Pose } from "./El";
 
 export type Section = {
   id: string;
-  pose: Pose;
+  pose: "neutral" | "thinking" | "waiting" | "celebrating";
   kicker: string;
   body: ReactNode;
 };
