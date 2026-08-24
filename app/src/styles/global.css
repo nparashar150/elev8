@@ -1,0 +1,406 @@
+/*
+ * One typeface, whole site. Inter carries a real optical-size axis, so the same
+ * family handles a 140px headline and 17px clinical body copy without pulling
+ * in a second font. Warmth comes from the palette and from El, not from mixing
+ * families — the type stays a neutral carrier because it sits beside words like
+ * "Cancer Panel".
+ */
+
+:root {
+  --cream: #fbf3ec;
+  --cream-deep: #f3e6d8;
+  --petal: #e8a79c;
+  --plum: #4a3b3f;
+  --plum-soft: #6b5559;
+  --ink: #2c2224;
+  --kalava: #c2412d;
+  --line: rgba(74, 59, 63, 0.12);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --stage: 46vw;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: Inter, system-ui, sans-serif;
+  font-optical-sizing: auto;
+  font-synthesis-weight: none;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  isolation: isolate;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+}
+
+h1 {
+  font-size: clamp(52px, 6.4vw, 104px);
+  font-weight: 900;
+  letter-spacing: -0.055em;
+}
+
+h1 em {
+  font-style: normal;
+  color: var(--kalava);
+}
+
+h2 {
+  font-size: clamp(34px, 3.8vw, 60px);
+  max-width: 15ch;
+}
+
+h3 {
+  font-size: 21px;
+  letter-spacing: -0.025em;
+  margin-bottom: 4px;
+}
+
+.nav {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 28px;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+.nav a {
+  pointer-events: auto;
+  text-decoration: none;
+}
+
+.wordmark {
+  display: flex;
+  align-items: baseline;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+.wordmark svg {
+  width: 0.68em;
+  height: 0.88em;
+  margin-left: 1px;
+}
+
+.nav-cta {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--kalava);
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--stage);
+  align-items: start;
+}
+
+.column {
+  padding: 0 clamp(24px, 5vw, 96px);
+}
+
+.panel {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* The floor keeps tall panels clear of the fixed wordmark. */
+  padding: clamp(96px, 14vh, 200px) 0;
+  max-width: 40rem;
+}
+
+.kicker {
+  margin: 0 0 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--plum-soft);
+}
+
+.lede {
+  margin: 18px 0 0;
+  font-size: clamp(21px, 2vw, 28px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--kalava);
+}
+
+.body {
+  margin: 18px 0 0;
+  font-size: 17px;
+  color: var(--plum);
+  max-width: 34em;
+}
+
+.fine {
+  margin: 10px 0 0;
+  font-size: 14px;
+  color: var(--plum-soft);
+}
+
+.quote {
+  margin: 24px 0 0;
+  font-size: clamp(28px, 3vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--kalava);
+}
+
+.pull {
+  margin: 32px 0 0;
+  font-size: clamp(32px, 3.4vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+.pull.small {
+  font-size: clamp(22px, 2vw, 30px);
+  max-width: 20ch;
+}
+
+.cue {
+  margin: 48px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--plum-soft);
+}
+
+.pairs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 32px 0 0;
+}
+
+.pairs dt {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+
+.pairs dd {
+  margin: 0;
+  font-size: 15px;
+  color: var(--plum);
+}
+
+.verticals,
+.voices,
+.numbered {
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+}
+
+.verticals li {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 16px;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+}
+
+.verticals li:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.verticals .dot {
+  width: 14px;
+  height: 14px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: var(--tile);
+}
+
+.verticals p {
+  margin: 0;
+  font-size: 15px;
+  color: var(--plum);
+}
+
+.voices li {
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
+}
+
+.voices li:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.was {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: var(--plum-soft);
+  text-decoration: line-through;
+  text-decoration-color: var(--petal);
+}
+
+.now {
+  margin: 0;
+  font-size: clamp(19px, 1.8vw, 25px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.numbered li {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 16px;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+}
+
+.numbered li:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.numbered span {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--kalava);
+  letter-spacing: -0.02em;
+}
+
+.numbered p {
+  margin: 0;
+  font-size: 15px;
+  color: var(--plum);
+}
+
+.swatches {
+  display: flex;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.swatches span {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.btn {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 52px;
+  margin-top: 28px;
+  padding: 0 26px;
+  border-radius: 999px;
+  background: var(--kalava);
+  color: var(--cream);
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.panel-close .fine a {
+  color: var(--plum-soft);
+}
+
+.stage-col {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.stage-bed {
+  position: absolute;
+  inset: 0;
+  background: var(--cream-deep);
+  z-index: -1;
+}
+
+.stage {
+  width: min(30vw, 380px);
+}
+
+.stage-svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.pose-label {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--plum-soft);
+}
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .stage-col {
+    order: -1;
+    height: 46svh;
+    gap: 6px;
+  }
+
+  .stage {
+    width: 54vw;
+  }
+
+  .panel {
+    min-height: auto;
+    padding: 10vh 0;
+  }
+
+  .pairs {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

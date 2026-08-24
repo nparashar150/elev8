@@ -1,0 +1,37 @@
+{
+  "name": "elev8",
+  "version": "1.0.0",
+  "description": "Pitch site for Health Centric → Elev8.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "tsc --noEmit && rm -rf static && vite build",
+    "preview": "vite preview --port 4173 --host 0.0.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nparashar150/elev8.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nparashar150/elev8/issues"
+  },
+  "homepage": "https://github.com/nparashar150/elev8#readme",
+  "private": "true",
+  "type": "module",
+  "dependencies": {
+    "motion": "^13.1.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "@vitejs/plugin-react": "^6.1.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2"
+  }
+}
