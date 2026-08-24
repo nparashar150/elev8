@@ -6,7 +6,9 @@ import { useIntro } from "./lib/useIntro";
 export default function App() {
   const reduced = useReducedMotion();
   const stageRef = useRef<HTMLDivElement>(null);
-  const intro = useIntro(stageRef, Boolean(reduced));
+  // `useReducedMotion` is `null` until the media query resolves. Treat only an
+  // explicit `true` as skip, or the intro would start and then cancel.
+  const intro = useIntro(stageRef, reduced === true);
 
   useEffect(() => {
     document.body.style.overflow = intro.done ? "" : "hidden";
@@ -35,7 +37,7 @@ export default function App() {
         </a>
       </motion.header>
 
-      <Story intro={intro} stageRef={stageRef} reduced={Boolean(reduced)} />
+      <Story intro={intro} stageRef={stageRef} reduced={reduced === true} />
     </>
   );
 }

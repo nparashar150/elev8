@@ -68,41 +68,41 @@ export function useIntro(stageRef: React.RefObject<HTMLDivElement | null>, skip:
     const run = async () => {
       // 1. Load. Same loop as Motion's example: offset 0 → −1, 1s, forever.
       const loop = play(animate(dashOffset, -1, { duration: 1, repeat: Infinity, ease: "linear" }));
-      await wait(2200);
+      await wait(2400);
       loop.stop();
       if (cancelled) return;
 
       // 2. Seal the dash so the whole mark is present, then close it into a circle.
       dashOffset.set(0);
       dashArray.set("1 0");
-      play(animate(trackOpacity, 0, { duration: 0.4 }));
-      await play(animate(d, CIRCLE_D, { duration: 0.62, ease: EASE }));
+      play(animate(trackOpacity, 0, { duration: 0.45 }));
+      await play(animate(d, CIRCLE_D, { duration: 0.8, ease: EASE }));
       if (cancelled) return;
-      await wait(500);
+      await wait(700);
       if (cancelled) return;
 
       // 3. The circle sinks and flattens into an opening in the page.
       play(animate(strokeOpacity, 0, { duration: 0.45 }));
       play(animate(fillOpacity, 1, { duration: 0.4 }));
-      await play(animate(d, HOLE_D, { duration: 0.62, ease: EASE }));
+      await play(animate(d, HOLE_D, { duration: 0.75, ease: EASE }));
       if (cancelled) return;
 
       // 4. She was always there. Ears first.
-      play(animate(elOpacity, 1, { duration: 0.2 }));
-      await play(animate(elY, 0, { type: "spring", stiffness: 90, damping: 15 }));
+      play(animate(elOpacity, 1, { duration: 0.25 }));
+      await play(animate(elY, 0, { type: "spring", stiffness: 70, damping: 16 }));
       if (cancelled) return;
 
       // 5. Two blinks, so she registers as present rather than placed.
-      await wait(320);
+      await wait(400);
       if (cancelled) return;
       setBlinking(true);
-      await wait(170);
+      await wait(220);
       setBlinking(false);
-      await wait(260);
+      await wait(280);
       setBlinking(true);
-      await wait(170);
+      await wait(220);
       setBlinking(false);
-      await wait(420);
+      await wait(480);
       if (cancelled) return;
 
       // 6. She carries the stage to the right. Content follows her, not the other way round.
