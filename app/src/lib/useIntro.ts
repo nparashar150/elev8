@@ -4,6 +4,8 @@ import { CIRCLE_D, HOLE_D, INFINITY_D } from "./shapes";
 import type { StageValues } from "../components/ElStage";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+/** Long travel needs easing that actually shows the travel, not an expo snap. */
+const GLIDE = [0.65, 0, 0.35, 1] as const;
 
 /**
  * The opening reads as one continuous gesture: the mark loads, resolves into a
@@ -21,6 +23,7 @@ export function useIntro(stageRef: React.RefObject<HTMLDivElement | null>, skip:
   const dashOffset = useMotionValue(0);
   const fillOpacity = useMotionValue(skip ? 1 : 0);
   const strokeOpacity = useMotionValue(skip ? 0 : 1);
+  const trackOpacity = useMotionValue(skip ? 0 : 0.2);
   const elY = useMotionValue(skip ? 0 : 78);
   const elOpacity = useMotionValue(skip ? 1 : 0);
 
@@ -83,9 +86,10 @@ export function useIntro(stageRef: React.RefObject<HTMLDivElement | null>, skip:
       // 2. The loop closes into a circle and the gap in the stroke seals shut.
       play(animate(dashLength, 1, { duration: 0.5, ease: EASE }));
       play(animate(dashOffset, 0, { duration: 0.5, ease: EASE }));
+      play(animate(trackOpacity, 0, { duration: 0.4 }));
       await play(animate(d, CIRCLE_D, { duration: 0.62, ease: EASE }));
       if (cancelled) return;
-      await wait(420);
+      await wait(500);
       if (cancelled) return;
 
       // 3. The circle sinks and flattens into an opening in the page.
@@ -100,24 +104,25 @@ export function useIntro(stageRef: React.RefObject<HTMLDivElement | null>, skip:
       if (cancelled) return;
 
       // 5. Two blinks, so she registers as present rather than placed.
-      await wait(260);
+      await wait(320);
       if (cancelled) return;
       setBlinking(true);
-      await wait(120);
+      await wait(170);
       setBlinking(false);
-      await wait(240);
+      await wait(260);
       setBlinking(true);
-      await wait(120);
+      await wait(170);
       setBlinking(false);
-      await wait(340);
+      await wait(420);
       if (cancelled) return;
 
-      // 6. She carries the stage to the right and hands the page over.
-      play(animate(pageOpacity, 1, { duration: 0.7, ease: EASE }));
+      // 6. She carries the stage to the right and hands the page over. The page
+      //    only starts arriving once she is underway, so the eye follows her.
+      play(animate(pageOpacity, 1, { duration: 0.8, delay: 0.35, ease: "easeOut" }));
       await Promise.all([
-        play(animate(offsetX, 0, { duration: 1.05, ease: EASE })),
-        play(animate(offsetY, 0, { duration: 1.05, ease: EASE })),
-        play(animate(scale, 1, { duration: 1.05, ease: EASE })),
+        play(animate(offsetX, 0, { duration: 1.25, ease: GLIDE })),
+        play(animate(offsetY, 0, { duration: 1.25, ease: GLIDE })),
+        play(animate(scale, 1, { duration: 1.25, ease: GLIDE })),
       ]);
       if (cancelled) return;
       setDone(true);
@@ -130,10 +135,10 @@ export function useIntro(stageRef: React.RefObject<HTMLDivElement | null>, skip:
       timers.forEach(window.clearTimeout);
       running.forEach((controls) => controls.stop());
     };
-  }, [skip, stageRef, d, dashLength, dashOffset, fillOpacity, strokeOpacity, elY, elOpacity, offsetX, offsetY, scale, pageOpacity]);
+  }, [skip, stageRef, d, dashLength, dashOffset, fillOpacity, strokeOpacity, trackOpacity, elY, elOpacity, offsetX, offsetY, scale, pageOpacity]);
 
   return {
-    values: { d, dash, dashOffset, fillOpacity, strokeOpacity, elY, elOpacity } satisfies StageValues,
+    values: { d, dash, dashOffset, fillOpacity, strokeOpacity, trackOpacity, elY, elOpacity } satisfies StageValues,
     offsetX,
     offsetY,
     scale,

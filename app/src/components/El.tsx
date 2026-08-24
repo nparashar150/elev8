@@ -98,8 +98,8 @@ export function El({ pose, blinking = false }: Props) {
           <motion.g
             key={cx}
             style={{ transformBox: "fill-box", transformOrigin: "center" }}
-            animate={{ scaleY: closed ? 0.1 : 1 }}
-            transition={{ duration: 0.09, ease: "easeOut" }}
+            animate={{ scaleY: closed ? 0.06 : 1 }}
+            transition={{ duration: 0.07, ease: "easeOut" }}
           >
             {happy ? (
               <path
@@ -153,13 +153,13 @@ export function El({ pose, blinking = false }: Props) {
           style={{ transformBox: "fill-box", transformOrigin: "center" }}
         >
           <circle
-            cx={194}
-            cy={104}
-            r={16}
+            cx={190}
+            cy={72}
+            r={21}
             stroke={PETAL}
-            strokeWidth={4.5}
+            strokeWidth={6}
             strokeLinecap="round"
-            strokeDasharray="36 66"
+            strokeDasharray="52 80"
             fill="none"
           />
         </motion.g>

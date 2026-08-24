@@ -8,6 +8,7 @@ export type StageValues = {
   dashOffset: MotionValue<number>;
   fillOpacity: MotionValue<number>;
   strokeOpacity: MotionValue<number>;
+  trackOpacity: MotionValue<number>;
   elY: MotionValue<number>;
   elOpacity: MotionValue<number>;
 };
@@ -31,6 +32,20 @@ export function ElStage({ values, pose, blinking }: Props) {
           <rect x="0" y="0" width="240" height={HOLE_LINE} />
         </clipPath>
       </defs>
+
+      {/*
+        The full loop sits underneath at low contrast so the mark reads as a
+        figure-eight the whole time. Without it a travelling dash on its own
+        just looks like a wandering line.
+      */}
+      <motion.path
+        d={values.d}
+        fill="none"
+        stroke="#E8A79C"
+        strokeWidth={7}
+        strokeLinecap="round"
+        style={{ opacity: values.trackOpacity }}
+      />
 
       <motion.path
         d={values.d}
