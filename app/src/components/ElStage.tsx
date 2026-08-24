@@ -38,7 +38,7 @@ export function ElStage({ values, pose, blinking }: Props) {
         d={values.d}
         fill="none"
         stroke="#E8A79C"
-        strokeWidth={7}
+        strokeWidth={6}
         strokeLinecap="round"
         strokeLinejoin="round"
         style={{ opacity: values.trackOpacity }}
@@ -49,7 +49,7 @@ export function ElStage({ values, pose, blinking }: Props) {
         pathLength={1}
         fill="#4A3B3F"
         stroke="#E8A79C"
-        strokeWidth={7}
+        strokeWidth={6}
         strokeLinecap="round"
         strokeLinejoin="round"
         style={{

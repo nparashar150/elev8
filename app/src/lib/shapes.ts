@@ -1,10 +1,9 @@
 /**
  * Morph targets for the opening sequence.
  *
- * Every shape is authored as `M` + four cubic `C` segments + `Z` in the same
- * order and direction. Matching the command structure is what lets Motion
- * interpolate the `d` attribute directly — mismatched commands make the
- * interpolator give up and snap between shapes.
+ * Every shape is `M` + four cubic `C` segments + `Z`, all starting at the top
+ * of the figure so Motion can interpolate `d` without snapping. The loader is
+ * a compact vertical 8 — the wordmark, not a wide sideways infinity.
  *
  * Shared coordinate space with <El />: viewBox "0 0 240 260".
  */
@@ -17,28 +16,27 @@ const shape = (start: [number, number], curves: [Cubic, Cubic, Cubic, Cubic]): S
   curves,
 });
 
-/** Ellipse/circle control point offset: 4 cubics approximate a circle at k * r. */
 const K = 0.5523;
 
-/** The wordmark's "8" laid on its side: one unbroken line, looped twice. */
-export const INFINITY = shape([30, 130], [
-  [30, 90, 120, 90, 120, 130],
-  [120, 170, 210, 170, 210, 130],
-  [210, 90, 120, 90, 120, 130],
-  [120, 170, 30, 170, 30, 130],
+/** Vertical 8 — wordmark proportions, compact, actually readable on the cream. */
+export const INFINITY = shape([120, 72], [
+  [82, 72, 82, 122, 120, 130],
+  [158, 138, 158, 188, 120, 188],
+  [82, 188, 82, 138, 120, 130],
+  [158, 122, 158, 72, 120, 72],
 ]);
 
-/** The loop resolves into a single closed circle. */
+/** The 8 resolves into a circle of almost the same size. */
 export const CIRCLE = (() => {
   const cx = 120;
   const cy = 130;
-  const r = 52;
+  const r = 48;
   const k = K * r;
-  return shape([cx - r, cy], [
-    [cx - r, cy - k, cx - k, cy - r, cx, cy - r],
+  return shape([cx, cy - r], [
     [cx + k, cy - r, cx + r, cy - k, cx + r, cy],
     [cx + r, cy + k, cx + k, cy + r, cx, cy + r],
     [cx - k, cy + r, cx - r, cy + k, cx - r, cy],
+    [cx - r, cy - k, cx - k, cy - r, cx, cy - r],
   ]);
 })();
 
@@ -46,15 +44,15 @@ export const CIRCLE = (() => {
 export const HOLE = (() => {
   const cx = 120;
   const cy = 206;
-  const rx = 96;
-  const ry = 20;
+  const rx = 72;
+  const ry = 18;
   const kx = K * rx;
   const ky = K * ry;
-  return shape([cx - rx, cy], [
-    [cx - rx, cy - ky, cx - kx, cy - ry, cx, cy - ry],
+  return shape([cx, cy - ry], [
     [cx + kx, cy - ry, cx + rx, cy - ky, cx + rx, cy],
     [cx + rx, cy + ky, cx + kx, cy + ry, cx, cy + ry],
     [cx - kx, cy + ry, cx - rx, cy + ky, cx - rx, cy],
+    [cx - rx, cy - ky, cx - kx, cy - ry, cx, cy - ry],
   ]);
 })();
 
@@ -62,9 +60,7 @@ const round = (n: number) => Math.round(n * 100) / 100;
 
 export function toPath({ start, curves }: Shape): string {
   const head = `M ${round(start[0])} ${round(start[1])}`;
-  const body = curves
-    .map((c) => `C ${c.map(round).join(" ")}`)
-    .join(" ");
+  const body = curves.map((c) => `C ${c.map(round).join(" ")}`).join(" ");
   return `${head} ${body} Z`;
 }
 

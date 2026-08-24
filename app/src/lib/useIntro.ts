@@ -7,15 +7,15 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 const GLIDE = [0.65, 0, 0.35, 1] as const;
 
 /**
- * Opening is a held sequence. The loader is Motion's infinite path-draw:
- * `pathLength={1}`, a 0.25/0.75 dash, `pathOffset` looping 0 → −1 linearly.
- * After two seconds of that, the same path morphs into a circle, holds, then
- * flattens into the hole El climbs out of.
+ * Opening is a held sequence. The loader is a compact vertical 8 — the
+ * wordmark, not a wide sideways infinity — with a dash chasing the stroke.
+ * After two seconds it morphs into a circle, holds, then flattens into the
+ * hole El climbs out of.
  */
 export function useIntro(stageRef: React.RefObject<HTMLDivElement | null>, skip: boolean) {
   const d = useMotionValue(skip ? HOLE_D : INFINITY_D);
   const dashOffset = useMotionValue(0);
-  const dashArray = useMotionValue(skip ? "1 0" : "0.25 0.75");
+  const dashArray = useMotionValue(skip ? "1 0" : "0.42 0.58");
   const fillOpacity = useMotionValue(skip ? 1 : 0);
   const strokeOpacity = useMotionValue(skip ? 0 : 1);
   const trackOpacity = useMotionValue(skip ? 0 : 0.28);
@@ -58,7 +58,7 @@ export function useIntro(stageRef: React.RefObject<HTMLDivElement | null>, skip:
       }
       const centreX = left + node.offsetWidth / 2 - window.scrollX;
       const centreY = top + node.offsetHeight / 2 - window.scrollY;
-      const target = Math.min(window.innerHeight * 0.6, window.innerWidth * 0.62);
+      const target = Math.min(window.innerHeight * 0.7, window.innerWidth * 0.48);
       scale.set(node.offsetHeight ? target / node.offsetHeight : 1);
       offsetX.set(window.innerWidth / 2 - centreX);
       offsetY.set(window.innerHeight / 2 - centreY);
