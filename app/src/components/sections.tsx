@@ -75,6 +75,20 @@ const PHASES = [
   ],
 ];
 
+/** Viewport-heights of pin time per beat. Denser copy gets a longer hold so the inner pan can finish. */
+export const SECTION_HOLD: Record<string, number> = {
+  hero: 1,
+  honest: 1.15,
+  choice: 1.25,
+  el: 1.2,
+  elevate: 1.9,
+  voice: 1.85,
+  kit: 1.35,
+  offer: 2.2,
+  run: 1.7,
+  close: 1.15,
+};
+
 export const SECTIONS: Section[] = [
   {
     id: "hero",

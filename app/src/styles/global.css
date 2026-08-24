@@ -24,7 +24,8 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Scroll-linked animation has to own the timeline. Smooth-scroll fights it. */
+  scroll-behavior: auto;
 }
 
 html,
@@ -131,6 +132,45 @@ h3 {
 
 .column {
   padding: 0 clamp(24px, 5vw, 96px);
+}
+
+.story-pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--stage);
+}
+
+.story-left {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  padding: 0 clamp(24px, 5vw, 96px);
+  overflow: hidden;
+}
+
+.story-beat {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.story-beat-inner {
+  padding: clamp(96px, 12vh, 160px) 0 40px;
+  max-width: 40rem;
+}
+
+.story-progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: var(--petal);
+  transform-origin: top center;
+  pointer-events: none;
+  z-index: 2;
 }
 
 .panel {
@@ -338,14 +378,18 @@ h3 {
 }
 
 .stage-col {
-  position: sticky;
-  top: 0;
+  position: relative;
   height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 12px;
+}
+
+.shell .stage-col {
+  position: sticky;
+  top: 0;
 }
 
 .stage-bed {
@@ -375,13 +419,15 @@ h3 {
 }
 
 @media (max-width: 900px) {
-  .shell {
+  .shell,
+  .story-pin {
     grid-template-columns: 1fr;
+    grid-template-rows: 42svh 1fr;
   }
 
   .stage-col {
     order: -1;
-    height: 46svh;
+    height: 42svh;
     gap: 6px;
   }
 
@@ -392,6 +438,10 @@ h3 {
   .panel {
     min-height: auto;
     padding: 10vh 0;
+  }
+
+  .story-beat-inner {
+    padding: 24px 0 32px;
   }
 
   .pairs {

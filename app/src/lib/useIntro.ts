@@ -1,29 +1,24 @@
-import { animate, useMotionValue, useTransform, type AnimationPlaybackControls } from "motion/react";
+import { animate, useMotionValue, type AnimationPlaybackControls } from "motion/react";
 import { useEffect, useState } from "react";
 import { CIRCLE_D, HOLE_D, INFINITY_D } from "./shapes";
 import type { StageValues } from "../components/ElStage";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
-/** Long travel needs easing that actually shows the travel, not an expo snap. */
 const GLIDE = [0.65, 0, 0.35, 1] as const;
 
 /**
- * The opening reads as one continuous gesture: the mark loads, resolves into a
- * circle, the circle sinks into a hole, El climbs out of it, blinks, and then
- * carries the whole stage over to the right where she stays for the rest of the
- * page.
- *
- * The loader is deliberately unhurried. Dynamic motion shortens how long a wait
- * *feels*, but urgent motion next to serious content reads as alarm, and El's
- * register is calm by construction.
+ * Opening is a held sequence. The loader is Motion's infinite path-draw:
+ * `pathLength={1}`, a 0.25/0.75 dash, `pathOffset` looping 0 → −1 linearly.
+ * After two seconds of that, the same path morphs into a circle, holds, then
+ * flattens into the hole El climbs out of.
  */
 export function useIntro(stageRef: React.RefObject<HTMLDivElement | null>, skip: boolean) {
   const d = useMotionValue(skip ? HOLE_D : INFINITY_D);
-  const dashLength = useMotionValue(skip ? 1 : 0.26);
   const dashOffset = useMotionValue(0);
+  const dashArray = useMotionValue(skip ? "1 0" : "0.25 0.75");
   const fillOpacity = useMotionValue(skip ? 1 : 0);
   const strokeOpacity = useMotionValue(skip ? 0 : 1);
-  const trackOpacity = useMotionValue(skip ? 0 : 0.2);
+  const trackOpacity = useMotionValue(skip ? 0 : 0.28);
   const elY = useMotionValue(skip ? 0 : 78);
   const elOpacity = useMotionValue(skip ? 1 : 0);
 
@@ -31,8 +26,6 @@ export function useIntro(stageRef: React.RefObject<HTMLDivElement | null>, skip:
   const offsetY = useMotionValue(0);
   const scale = useMotionValue(1);
   const pageOpacity = useMotionValue(skip ? 1 : 0);
-
-  const dash = useTransform(dashLength, (v) => `${v} ${Math.max(1 - v, 0.0001)}`);
 
   const [blinking, setBlinking] = useState(false);
   const [done, setDone] = useState(skip);
@@ -54,11 +47,6 @@ export function useIntro(stageRef: React.RefObject<HTMLDivElement | null>, skip:
       return controls;
     };
 
-    // Park the stage dead centre, larger than its resting size.
-    //
-    // The offsets are measured from layout geometry rather than
-    // getBoundingClientRect, because the rect already includes whatever
-    // transform is on the element and would compound if this effect re-runs.
     const centre = () => {
       const node = stageRef.current;
       if (!node) return;
@@ -78,14 +66,15 @@ export function useIntro(stageRef: React.RefObject<HTMLDivElement | null>, skip:
     centre();
 
     const run = async () => {
-      // 1. Load. The dash travels the figure-eight twice before anything resolves.
-      play(animate(dashOffset, -2, { duration: 1.9, ease: "linear" }));
-      await wait(1900);
+      // 1. Load. Same loop as Motion's example: offset 0 → −1, 1s, forever.
+      const loop = play(animate(dashOffset, -1, { duration: 1, repeat: Infinity, ease: "linear" }));
+      await wait(2200);
+      loop.stop();
       if (cancelled) return;
 
-      // 2. The loop closes into a circle and the gap in the stroke seals shut.
-      play(animate(dashLength, 1, { duration: 0.5, ease: EASE }));
-      play(animate(dashOffset, 0, { duration: 0.5, ease: EASE }));
+      // 2. Seal the dash so the whole mark is present, then close it into a circle.
+      dashOffset.set(0);
+      dashArray.set("1 0");
       play(animate(trackOpacity, 0, { duration: 0.4 }));
       await play(animate(d, CIRCLE_D, { duration: 0.62, ease: EASE }));
       if (cancelled) return;
@@ -116,8 +105,7 @@ export function useIntro(stageRef: React.RefObject<HTMLDivElement | null>, skip:
       await wait(420);
       if (cancelled) return;
 
-      // 6. She carries the stage to the right and hands the page over. The page
-      //    only starts arriving once she is underway, so the eye follows her.
+      // 6. She carries the stage to the right. Content follows her, not the other way round.
       play(animate(pageOpacity, 1, { duration: 0.8, delay: 0.35, ease: "easeOut" }));
       await Promise.all([
         play(animate(offsetX, 0, { duration: 1.25, ease: GLIDE })),
@@ -135,10 +123,10 @@ export function useIntro(stageRef: React.RefObject<HTMLDivElement | null>, skip:
       timers.forEach(window.clearTimeout);
       running.forEach((controls) => controls.stop());
     };
-  }, [skip, stageRef, d, dashLength, dashOffset, fillOpacity, strokeOpacity, trackOpacity, elY, elOpacity, offsetX, offsetY, scale, pageOpacity]);
+  }, [skip, stageRef, d, dashOffset, dashArray, fillOpacity, strokeOpacity, trackOpacity, elY, elOpacity, offsetX, offsetY, scale, pageOpacity]);
 
   return {
-    values: { d, dash, dashOffset, fillOpacity, strokeOpacity, trackOpacity, elY, elOpacity } satisfies StageValues,
+    values: { d, dashOffset, dashArray, fillOpacity, strokeOpacity, trackOpacity, elY, elOpacity } satisfies StageValues,
     offsetX,
     offsetY,
     scale,

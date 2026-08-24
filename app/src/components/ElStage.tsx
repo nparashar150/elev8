@@ -4,8 +4,8 @@ import { HOLE_LINE } from "../lib/shapes";
 
 export type StageValues = {
   d: MotionValue<string>;
-  dash: MotionValue<string>;
   dashOffset: MotionValue<number>;
+  dashArray: MotionValue<string>;
   fillOpacity: MotionValue<number>;
   strokeOpacity: MotionValue<number>;
   trackOpacity: MotionValue<number>;
@@ -20,9 +20,10 @@ type Props = {
 };
 
 /**
- * One SVG carries the whole opening: the looping mark, the circle it resolves
- * into, and the hole El climbs out of. Keeping them in a single coordinate
- * space is what makes the sequence read as one object instead of three.
+ * Two identical paths, same recipe as Motion's infinite path-drawing example:
+ * a faint full track plus a 25% dash whose offset runs 0 → −1 on `pathLength={1}`.
+ * When the intro morphs, both paths share `d` so the figure-eight, the circle
+ * and the hole are one object, not three drawings swapped in.
  */
 export function ElStage({ values, pose, blinking }: Props) {
   return (
@@ -33,17 +34,13 @@ export function ElStage({ values, pose, blinking }: Props) {
         </clipPath>
       </defs>
 
-      {/*
-        The full loop sits underneath at low contrast so the mark reads as a
-        figure-eight the whole time. Without it a travelling dash on its own
-        just looks like a wandering line.
-      */}
       <motion.path
         d={values.d}
         fill="none"
         stroke="#E8A79C"
         strokeWidth={7}
         strokeLinecap="round"
+        strokeLinejoin="round"
         style={{ opacity: values.trackOpacity }}
       />
 
@@ -51,15 +48,16 @@ export function ElStage({ values, pose, blinking }: Props) {
         d={values.d}
         pathLength={1}
         fill="#4A3B3F"
-        style={{
-          fillOpacity: values.fillOpacity,
-          strokeOpacity: values.strokeOpacity,
-          strokeDasharray: values.dash,
-          strokeDashoffset: values.dashOffset,
-        }}
         stroke="#E8A79C"
         strokeWidth={7}
         strokeLinecap="round"
+        strokeLinejoin="round"
+        style={{
+          fillOpacity: values.fillOpacity,
+          strokeOpacity: values.strokeOpacity,
+          strokeDashoffset: values.dashOffset,
+          strokeDasharray: values.dashArray,
+        }}
       />
 
       <motion.g clipPath="url(#hole-clip)" style={{ opacity: values.elOpacity }}>
