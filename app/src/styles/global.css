@@ -1,23 +1,58 @@
+@import "tailwindcss";
+@import "@heroui/styles";
+
 /*
- * One family: Inter, optical size on. Display sits at wght 560 — Linear’s register —
- * so a 96px line doesn’t shout. Colour is cream, ink, and one red for action.
+ * Brand tokens as Tailwind v4 theme vars, so `text-kalava` / `bg-fuel` and the
+ * hand-written CSS below read from one source.
+ *
+ * Two overlapping sets, and they are not the same list:
+ *   - the kit palette (§06), what the swatch row shows
+ *   - the six vertical marks (bible §09)
+ * Kalava is in both. Petal and Plum belong to El and never carry a UI action.
  */
+@theme {
+  --font-sans: Inter, system-ui, sans-serif;
+
+  --color-cream: #f7f1ea;
+  --color-ink: #1c1614;
+  --color-muted: #6a5c58;
+  --color-kalava: #c2412d;
+  --color-petal: #e8a79c;
+  --color-plum: #4a3b3f;
+
+  /* Block backgrounds are darkened where the brand value can't carry cream body
+     copy at AA. Jade 4.41 and Teal 3.70 both failed; the marks keep the original
+     values, only the full-bleed grounds shift. */
+  --color-kalava-block: #ab3928;
+  --color-fuel-block: #446948;
+  --color-look-block: #216c65;
+
+  --color-move: #c2412d;
+  --color-long: #e6b422;
+  --color-clear: #3d458f;
+  --color-fuel: #4f7a54;
+  --color-know: #7a5a8a;
+  --color-look: #2a8a82;
+}
 
 :root {
-  --cream: #f7f1ea;
-  --ink: #1c1614;
-  --muted: #6a5c58;
-  --line: rgba(28, 22, 20, 0.1);
-  --kalava: #c2412d;
-  --petal: #e8a79c;
+  --cream: var(--color-cream);
+  --ink: var(--color-ink);
+  --muted: var(--color-muted);
+  --line: rgb(28 22 20 / 10%);
+  --kalava: var(--color-kalava);
+  --petal: var(--color-petal);
+  --plum: var(--color-plum);
+  --move: var(--color-move);
+  --long: var(--color-long);
+  --clear: var(--color-clear);
+  --fuel: var(--color-fuel);
+  --know: var(--color-know);
+  --look: var(--color-look);
 }
 
 * {
   box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: auto;
 }
 
 html,
@@ -28,8 +63,7 @@ body {
   font-family: Inter, system-ui, sans-serif;
   font-optical-sizing: auto;
   font-synthesis-weight: none;
-  font-weight: 400;
-  line-height: 1.55;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -47,18 +81,26 @@ a {
   color: inherit;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 h1,
-h2,
-h3 {
+h2 {
   margin: 0;
   font-weight: 560;
-  letter-spacing: -0.035em;
-  line-height: 1.04;
+  letter-spacing: -0.04em;
+  line-height: 1;
 }
 
 h1 {
-  font-size: clamp(44px, 7vw, 96px);
-  max-width: 11ch;
+  font-size: clamp(46px, 7.4vw, 104px);
+  max-width: 12ch;
 }
 
 h1 em {
@@ -67,38 +109,34 @@ h1 em {
 }
 
 h2 {
-  font-size: clamp(32px, 4.2vw, 56px);
-  max-width: 16ch;
+  font-size: clamp(34px, 5vw, 68px);
+  max-width: 15ch;
 }
 
-h3 {
-  font-size: 18px;
-  letter-spacing: -0.02em;
-  font-weight: 560;
-  margin-bottom: 4px;
-}
+/* ---------- Preload ---------- */
 
-.intro-veil {
+.preload {
   position: fixed;
   inset: 0;
+  z-index: 50;
   background: var(--cream);
-  z-index: 40;
   pointer-events: none;
 }
 
-.intro-eight {
-  position: fixed;
-  inset: 0;
-  z-index: 41;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
+.preload-stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(360px, 46vw);
+  translate: -50% -50%;
 }
 
-.intro-eight svg {
-  height: min(72vh, 560px);
-  width: auto;
+.preload-rise {
+  width: 100%;
+  height: auto;
 }
+
+/* ---------- Chrome ---------- */
 
 .nav {
   position: fixed;
@@ -107,8 +145,11 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 28px 40px;
+  padding: 24px clamp(20px, 4vw, 48px);
   pointer-events: none;
+  /* Follows whichever card is on top, set from the deck state. */
+  color: var(--nav-on, var(--color-ink));
+  transition: color 260ms ease;
 }
 
 .nav a {
@@ -117,7 +158,7 @@ h3 {
 }
 
 .wordmark {
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 560;
   letter-spacing: -0.04em;
 }
@@ -125,306 +166,483 @@ h3 {
 .nav-cta {
   font-size: 14px;
   font-weight: 500;
-  color: var(--kalava);
 }
 
-.story-pin {
+/* ---------- Colour blocks ---------- */
+
+/*
+ * Every section is a full-bleed brand colour. Only two text colours are ever
+ * used on a block, and which one is set per block by measured contrast, not by
+ * eye. Muted variants are alpha of the on-colour so they inherit correctly.
+ */
+/* Stacked cards: each sticks at the top and the next slides over it. */
+.stack-card {
   position: sticky;
   top: 0;
-  height: 100svh;
 }
 
-.story-left {
-  position: relative;
-  height: 100%;
-  padding: 0 clamp(40px, 8vw, 120px);
-  overflow: hidden;
+.stack-card-inner {
+  will-change: transform, filter;
 }
 
-.story-flow {
-  padding: 0 clamp(40px, 8vw, 120px);
-}
-
-.story-beat {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.story-beat.is-active {
-  visibility: visible;
-  pointer-events: auto;
-}
-
-.story-beat-inner {
-  padding: clamp(120px, 18vh, 180px) 0 48px;
-  max-width: 38rem;
-}
-
-.story-progress {
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 1px;
-  width: 100%;
-  background: var(--ink);
-  transform-origin: left center;
-  pointer-events: none;
-  z-index: 21;
-  opacity: 0.22;
-}
-
-.panel {
+.block {
   min-height: 100svh;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: clamp(96px, 14vh, 180px) 0;
-  max-width: 38rem;
+  align-items: center;
+  padding: clamp(88px, 11vw, 152px) clamp(20px, 6vw, 100px);
+}
+
+.block-inner {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.block-on-cream {
+  --on: var(--color-cream);
+  --on-muted: rgb(247 241 234 / 72%);
+  --rule: rgb(247 241 234 / 24%);
+  color: var(--on);
+}
+
+.block-on-ink {
+  --on: var(--color-ink);
+  --on-muted: rgb(28 22 20 / 66%);
+  --rule: rgb(28 22 20 / 16%);
+  color: var(--on);
 }
 
 .kicker {
-  margin: 0 0 18px;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.lede {
-  margin: 16px 0 0;
-  font-size: clamp(20px, 1.8vw, 26px);
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  color: var(--kalava);
-}
-
-.body {
-  margin: 18px 0 0;
-  font-size: 17px;
-  color: var(--muted);
-  max-width: 34em;
-}
-
-.fine {
-  margin: 10px 0 0;
-  font-size: 14px;
-  color: var(--muted);
-}
-
-.quote {
-  margin: 24px 0 0;
-  font-size: clamp(26px, 2.6vw, 40px);
-  font-weight: 560;
-  letter-spacing: -0.03em;
-  color: var(--ink);
-}
-
-.pull {
-  margin: 32px 0 0;
-  font-size: clamp(28px, 3vw, 44px);
-  font-weight: 560;
-  letter-spacing: -0.035em;
-  line-height: 1.08;
-}
-
-.pull.small {
-  font-size: clamp(20px, 1.8vw, 28px);
-  max-width: 22ch;
-}
-
-.cue {
-  margin: 48px 0 0;
+  margin: 0 0 20px;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--on-muted);
 }
 
-.pairs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin: 32px 0 0;
+.lede {
+  margin: 20px 0 0;
+  font-size: clamp(20px, 2.1vw, 30px);
+  font-weight: 500;
+  letter-spacing: -0.025em;
 }
 
-.pairs dt {
+.block-on-ink .lede {
+  color: var(--kalava);
+}
+
+.line {
+  margin: 20px 0 0;
+  font-size: var(--text-body);
+  color: var(--on-muted);
+  max-width: 48ch;
+}
+
+/* One body size across every block, so nothing reads as an odd one out. */
+:root {
+  --text-body: clamp(16px, 1.35vw, 19px);
+}
+
+.cue {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 30px 0 0;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--on-muted);
+}
+
+.pull {
+  margin: 26px 0 0;
+  font-size: clamp(24px, 2.6vw, 40px);
   font-weight: 560;
-  letter-spacing: -0.02em;
-  margin-bottom: 6px;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  max-width: 22ch;
 }
 
-.pairs dd {
+.pull-muted {
+  color: var(--on-muted);
+}
+
+.fine {
+  margin: 26px 0 0;
+  font-size: 13px;
+  color: var(--on-muted);
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(28px, 5vw, 72px);
+  align-items: center;
+}
+
+/* ---------- The hole ---------- */
+
+.hole {
+  position: relative;
+  width: var(--hole-width);
+}
+
+.hole-well {
+  overflow: hidden;
+}
+
+.hole-payload {
+  display: flex;
+  justify-content: center;
+}
+
+/* Sits on the container's bottom edge, so the well clips at its centre line. */
+.hole-lip {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 100%;
+  aspect-ratio: 100 / 23;
+  translate: -50% 50%;
+  border-radius: 50%;
+  background: var(--plum);
+  z-index: -1;
+}
+
+/* ---------- El ---------- */
+
+.el-png {
+  width: 100%;
+  height: auto;
+}
+
+/*
+ * El idles rather than sitting dead still: a slow sway pivoting at the hole's
+ * rim, so the ears travel furthest. Bible §04 register applies here too, calm
+ * and slow, never a bounce.
+ *
+ * ponytail: sways the whole sprite because the export is a flat raster with no
+ * separated ear layer. Real ear-waving needs the ears on their own layer.
+ */
+.el-idle {
+  animation: el-sway 6s ease-in-out infinite;
+  transform-origin: 50% 92%;
+}
+
+@keyframes el-sway {
+  0%,
+  100% {
+    transform: rotate(-1.1deg);
+  }
+  50% {
+    transform: rotate(1.1deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .el-idle {
+    animation: none;
+  }
+}
+
+.poses {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(12px, 3vw, 44px);
+  margin: clamp(28px, 4vw, 48px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.poses li {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+
+.poses img {
+  width: 100%;
+  max-width: 190px;
+  margin-inline: auto;
+}
+
+.poses .hole {
+  width: 100%;
+}
+
+.poses span {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--on-muted);
+}
+
+.close {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.close-el {
+  width: min(260px, 46vw);
+  margin-bottom: 12px;
+}
+
+.cta {
+  margin-top: 30px;
+  background: var(--kalava);
+  color: var(--cream);
+}
+
+/* ---------- Verticals ---------- */
+
+.marks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(10px, 2.4vw, 30px);
+  margin: clamp(28px, 4vw, 44px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mark {
+  overflow: visible;
+}
+
+.mark-label {
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 560;
+  letter-spacing: 0.04em;
+  color: var(--tile);
+}
+
+.mark-tagline {
+  color: var(--tile);
+}
+
+.palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(14px, 2.4vw, 30px);
+  margin: clamp(26px, 4vw, 40px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.palette li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--on-muted);
+}
+
+.marks button {
+  display: grid;
+  place-items: center;
+  width: auto;
+  height: auto;
+  padding: 8px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  opacity: 0.38;
+  transition: opacity 200ms ease, scale 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.marks button[aria-pressed="true"] {
+  opacity: 1;
+  scale: 1.12;
+}
+
+.marks button:hover {
+  opacity: 0.8;
+}
+
+.mark-copy {
+  min-height: 148px;
+  margin-top: 26px;
+}
+
+.mark-name {
   margin: 0;
-  font-size: 15px;
-  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tile);
 }
 
-.verticals,
-.voices,
+.mark-copy .pull {
+  margin-top: 8px;
+}
+
+/* ---------- Voices ---------- */
+
+.voices {
+  margin-top: clamp(26px, 4vw, 40px);
+}
+
+.voices-tabs {
+  margin-bottom: 26px;
+}
+
+.voice-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 920px;
+}
+
+.voice-lines li {
+  padding: 15px 0;
+  border-top: 1px solid var(--rule);
+  font-size: var(--text-body);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.voice-lines li:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+.voice-lines .was {
+  color: var(--on-muted);
+}
+
+.voice-lines .now {
+  font-weight: 560;
+}
+
+/* ---------- Disclosure ---------- */
+
+.expand {
+  margin-top: 28px;
+  max-width: 760px;
+}
+
+.expand-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--on);
+}
+
+.expand-body {
+  font-size: var(--text-body);
+  color: var(--on-muted);
+  max-width: 52ch;
+}
+
+/* ---------- Lists ---------- */
+
 .numbered {
   list-style: none;
-  margin: 28px 0 0;
+  margin: clamp(28px, 4vw, 44px) 0 0;
   padding: 0;
-}
-
-.verticals li {
-  display: grid;
-  grid-template-columns: 14px 1fr;
-  gap: 16px;
-  padding: 16px 0;
-  border-top: 1px solid var(--line);
-}
-
-.verticals li:last-child {
-  border-bottom: 1px solid var(--line);
-}
-
-.verticals .dot {
-  width: 8px;
-  height: 8px;
-  margin-top: 8px;
-  border-radius: 50%;
-  background: var(--tile);
-}
-
-.verticals p {
-  margin: 0;
-  font-size: 15px;
-  color: var(--muted);
-}
-
-.voices li {
-  padding: 18px 0;
-  border-top: 1px solid var(--line);
-}
-
-.voices li:last-child {
-  border-bottom: 1px solid var(--line);
-}
-
-.was {
-  margin: 0 0 6px;
-  font-size: 13px;
-  color: var(--muted);
-  text-decoration: line-through;
-  text-decoration-color: var(--line);
-}
-
-.now {
-  margin: 0;
-  font-size: clamp(18px, 1.6vw, 24px);
-  font-weight: 560;
-  letter-spacing: -0.025em;
-  line-height: 1.2;
+  max-width: 900px;
 }
 
 .numbered li {
   display: grid;
-  grid-template-columns: 40px 1fr;
-  gap: 16px;
-  padding: 16px 0;
-  border-top: 1px solid var(--line);
+  grid-template-columns: 36px 150px 1fr;
+  gap: 18px;
+  align-items: baseline;
+  padding: 15px 0;
+  border-top: 1px solid var(--rule);
 }
 
 .numbered li:last-child {
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--rule);
 }
 
 .numbered span {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
-  color: var(--kalava);
-  letter-spacing: 0.04em;
+  color: var(--on-muted);
 }
 
-.numbered p {
-  margin: 0;
-  font-size: 15px;
-  color: var(--muted);
+.numbered b {
+  font-size: 17px;
+  font-weight: 560;
+  letter-spacing: -0.02em;
 }
 
-.swatches {
+.numbered i {
+  font-style: normal;
+  font-size: var(--text-body);
+  color: var(--on-muted);
+}
+
+.terse {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 48px;
+  margin: clamp(28px, 4vw, 44px) 0 0;
+  max-width: 900px;
+}
+
+.terse div {
   display: flex;
-  gap: 8px;
-  margin-top: 24px;
+  gap: 14px;
+  padding: 14px 0;
+  border-top: 1px solid var(--rule);
 }
 
-.swatches span {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-}
-
-.btn {
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  min-height: 48px;
-  margin-top: 28px;
-  padding: 0 22px;
-  border-radius: 999px;
-  background: var(--kalava);
-  color: var(--cream);
-  text-decoration: none;
-  font-weight: 500;
+.terse dt {
+  width: 78px;
+  flex-shrink: 0;
   font-size: 15px;
-  letter-spacing: -0.01em;
+  font-weight: 560;
 }
 
-.panel-close .fine a {
-  color: var(--muted);
-}
-
-.el-mark {
-  position: fixed;
-  right: clamp(20px, 4vw, 48px);
-  bottom: clamp(20px, 5vh, 48px);
-  width: min(132px, 22vw);
-  z-index: 15;
-  pointer-events: none;
-}
-
-.el-svg {
-  width: 100%;
-  height: auto;
-  overflow: visible;
+.terse dd {
+  margin: 0;
+  font-size: var(--text-body);
+  color: var(--on-muted);
 }
 
 @media (max-width: 900px) {
-  .nav {
-    padding: 20px 22px;
-  }
-
-  .story-left,
-  .story-flow {
-    padding: 0 22px;
-  }
-
-  .el-mark {
-    width: 88px;
-    right: 16px;
-    bottom: 16px;
-  }
-
-  .intro-eight svg {
-    height: min(46vh, 280px);
-  }
-
-  .panel {
-    min-height: auto;
-    padding: 12vh 0;
-  }
-
-  .story-beat-inner {
-    padding: 88px 0 32px;
-  }
-
-  .pairs {
+  .hero {
     grid-template-columns: 1fr;
+  }
+
+  .hero .hole {
+    margin-inline: auto;
+  }
+
+  .terse {
+    grid-template-columns: 1fr;
+  }
+
+  .numbered li {
+    grid-template-columns: 30px 1fr;
+  }
+
+  .numbered i {
+    grid-column: 2;
+    margin-top: 3px;
+  }
+
+  .poses {
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+
+  .poses li {
+    flex: 1 1 40%;
   }
 }

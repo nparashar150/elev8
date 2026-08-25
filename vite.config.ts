@@ -1,12 +1,13 @@
-import { defineConfig } from "vite";
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 
 // The site is served by GitHub Pages from the repository root of `main`, so the
 // production build is written back into the repo root and committed.
 export default defineConfig({
   root: "app",
   base: "/elev8/",
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   build: {
     outDir: "..",
     assetsDir: "static",
