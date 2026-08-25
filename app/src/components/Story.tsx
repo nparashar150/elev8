@@ -1,7 +1,8 @@
 import { Button, ColorSwatch, Kbd } from "@heroui/react";
 import { motion } from "motion/react";
 import { useEffect } from "react";
-import riseSrc from "../assets/el-rise.png";
+import closeSrc from "../assets/el-rise.png";
+import heroSrc from "../assets/el/neutral.png";
 import { ENTER } from "../lib/motion";
 import { useDeck } from "../lib/useDeck";
 import type { useIntro } from "../lib/useIntro";
@@ -113,10 +114,14 @@ export function Story({ intro, reduced }: Props) {
                 Start reading
               </p>
             </div>
-            {/* She comes up out of the hole here too, not just at the close. */}
-            <Hole width="min(300px, 42vw)">
-              <img className="el-png el-wave" src={riseSrc} alt="" />
-            </Hole>
+            {/*
+              She is simply here, peeking up, as the script has it: "a small
+              hole open at the lower-right, El peeking up, ears up, watching the
+              headline arrive." The rise belongs to the loader and to Meet El;
+              doing it again here made her reveal twice on a first visit and
+              wave on every reload.
+            */}
+            <img className="el-png el-idle hero-el" src={heroSrc} alt="" />
           </div>
         </Block>
       </StackCard>
@@ -242,9 +247,9 @@ export function Story({ intro, reduced }: Props) {
               A pitch from <b>02100</b>, a design studio in Bengaluru. ·{" "}
               <a href="assets/elev8-landing-page-final.pdf">Download the deck</a>
             </p>
-            {/* She comes up one last time to close it out. */}
+            {/* One last rise to close it out. */}
             <Hole width="min(240px, 52vw)">
-              <img className="el-png el-idle" src={riseSrc} alt="" />
+              <img className="el-png el-idle" src={closeSrc} alt="" />
             </Hole>
           </div>
         </Block>

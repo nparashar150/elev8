@@ -14,23 +14,21 @@ const EL_Y = EIGHT_CENTRE.cy - EL_H;
 /**
  * The loader, matching the Paper file's five loading artboards:
  *
- *   01 Trace    a petal dash travels the faint 8
- *   02 Infinity it keeps going, one unbroken line
- *   03 Unwind   the loop collapses to a small ellipse at the centre
- *   04 The hole the ellipse opens, petal rim around warm plum
- *   05 El       the rim recedes and she rises through, ears first
+ *   01-02  the 8 draws itself as one unbroken line
+ *   03     the loop collapses to a small ellipse at the centre
+ *   04     the ellipse opens, petal rim around warm plum
+ *   05     the rim recedes and El rises through, ears first
  */
 type Props = {
-  trackOpacity: MotionValue<number>;
-  dashOffset: MotionValue<number>;
-  tracerOpacity: MotionValue<number>;
+  draw: MotionValue<number>;
+  eightOpacity: MotionValue<number>;
   rx: MotionValue<number>;
   ry: MotionValue<number>;
   ringOpacity: MotionValue<number>;
   riseY: MotionValue<number>;
 };
 
-export function Loader({ trackOpacity, dashOffset, tracerOpacity, rx, ry, ringOpacity, riseY }: Props) {
+export function Loader({ draw, eightOpacity, rx, ry, ringOpacity, riseY }: Props) {
   return (
     <svg className="loader-eight" viewBox="0 -56 120 116" fill="none" aria-hidden="true">
       <defs>
@@ -40,23 +38,15 @@ export function Loader({ trackOpacity, dashOffset, tracerOpacity, rx, ry, ringOp
         </clipPath>
       </defs>
 
+      {/* One unbroken line, drawing itself. No spinner: nothing is loading, and
+          a dash chasing a track is a progress fiction. */}
       <motion.path
         d={EIGHT_D}
         stroke="var(--petal)"
         strokeWidth={EIGHT_STROKE}
         strokeLinecap="round"
         strokeLinejoin="round"
-        style={{ opacity: trackOpacity }}
-      />
-
-      <motion.path
-        d={EIGHT_D}
-        stroke="var(--petal)"
-        strokeWidth={EIGHT_STROKE}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeDasharray="32 220"
-        style={{ strokeDashoffset: dashOffset, opacity: tracerOpacity }}
+        style={{ pathLength: draw, opacity: eightOpacity }}
       />
 
       {/* Back to front: the hole, then El clipped at its centre line, then the

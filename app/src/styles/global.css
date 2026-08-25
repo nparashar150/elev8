@@ -125,6 +125,11 @@ h2 {
   pointer-events: none;
 }
 
+.loader-travel {
+  /* Scale converges on the hole, which is what lands on the logotype. */
+  transform-origin: 50% 74.1%;
+}
+
 /* The reference draws the eight 400px wide on a 1440 artboard. */
 .loader-eight {
   width: min(400px, 62vw);
@@ -360,6 +365,10 @@ h2 {
   height: auto;
 }
 
+.hero-el {
+  width: min(300px, 42vw);
+}
+
 /*
  * El idles rather than sitting dead still: a slow sway pivoting at the hole's
  * rim, so the ears travel furthest. Bible §04 register applies here too, calm
@@ -373,37 +382,8 @@ h2 {
   transform-origin: 50% 92%;
 }
 
-/* A hello on arrival: two clear tips of the whole body, then the idle sway
-   takes over. ponytail: the export is a flat raster with no separated ear
-   layer, so this waves all of her. Real ear-waving needs layered art. */
-.el-wave {
-  animation: el-wave 1.5s cubic-bezier(0.22, 1, 0.36, 1) 1 both, el-sway 6s ease-in-out 1.5s infinite;
-  transform-origin: 50% 92%;
-}
-
-@keyframes el-wave {
-  0% {
-    transform: rotate(0deg);
-  }
-  22% {
-    transform: rotate(-9deg);
-  }
-  46% {
-    transform: rotate(7deg);
-  }
-  68% {
-    transform: rotate(-5deg);
-  }
-  86% {
-    transform: rotate(2deg);
-  }
-  100% {
-    transform: rotate(-1.1deg);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .el-wave {
+  .el-idle {
     animation: none;
   }
 }
