@@ -1,13 +1,13 @@
 {
   "name": "elev8",
   "version": "1.0.0",
-  "description": "Pitch site for Health Centric → Elev8.",
+  "description": "Pitch site for Health Centric \u2192 Elev8.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vite",
-    "build": "tsc --noEmit && rm -rf static && vite build",
-    "preview": "vite preview --port 4173 --host 0.0.0.0"
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --port 4173"
   },
   "repository": {
     "type": "git",

@@ -2,16 +2,14 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
-// The site is served by GitHub Pages from the repository root of `main`, so the
-// production build is written back into the repo root and committed.
 export default defineConfig({
   root: "app",
-  base: "/elev8/",
   plugins: [react(), tailwindcss()],
   build: {
-    outDir: "..",
+    outDir: "../dist",
+    // Vite's own output goes to static/ so it cannot collide with the PDFs that
+    // app/public/assets copies into dist/assets.
     assetsDir: "static",
-    emptyOutDir: false,
-    sourcemap: false,
+    emptyOutDir: true,
   },
 });
