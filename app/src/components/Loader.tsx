@@ -19,22 +19,23 @@ import { Wordmark } from "./Wordmark";
  * match rather than a dissolve, and it is why the 8 cannot end up out of
  * proportion with "Elev" in one place and right in the other.
  *
- * Geometry: turned upright, the mark's crown sits at y = -18. She comes up from
- * behind that crown rather than through the loop's counter, which at a stroke of
- * 15 is far too small to read as an opening. Her ears overflow above the
- * viewBox, which the stylesheet allows.
+ * Geometry: turned upright, the mark's upper loop is centred at (60, 0). That
+ * loop is the hole. She is clipped at its centre line, so her body stays down
+ * inside it while her ears rise clear above the whole mark, and the ribbon is
+ * painted over her so it reads as the rim she is coming through.
  */
-const CROWN = -10;
-/*
- * el-rise.png spans the full width of her hole, so she only occupies about half
- * of it. Sized off the sprite alone she comes out a speck; this is scaled so her
- * body reads at roughly the mark's own width.
- */
-const EL = { w: 74, h: 74 * (462 / 608) };
-const EL_X = 60 - EL.w / 2;
-const EL_Y = CROWN - EL.h;
+const LOOP = { cx: 60, cy: 0 };
 
-/** How far she travels to sit fully inside the loop. */
+/*
+ * el-rise.png spans the full width of her hole, so she occupies only about half
+ * of the sprite and its width badly understates her. This is scaled so her ears
+ * stand well above the 8 rather than peeking over it.
+ */
+const EL = { w: 92, h: 92 * (462 / 608) };
+const EL_X = LOOP.cx - EL.w / 2;
+const EL_Y = LOOP.cy - EL.h;
+
+/** How far she travels to sit fully out of sight inside the loop. */
 export const EL_TRAVEL = EL.h;
 
 type Props = {
@@ -54,14 +55,14 @@ export function Loader({ elev, draw, riseY }: Props) {
         draw={draw}
         defs={
           <clipPath id="loader-loop-clip">
-            {/* Nothing of her shows below the crown, so she reads as being
-                inside the mark until she climbs out of the top of it. */}
-            <rect x={EL_X} y={-110} width={EL.w} height={110 + CROWN} />
+            {/* Nothing below the loop's centre line: she is down in the hole,
+                and only what has cleared it shows. */}
+            <rect x={EL_X} y={-260} width={EL.w} height={260 + LOOP.cy} />
           </clipPath>
         }
         behind={
-          /* Painted before the mark, so the crown crosses in front of her
-             and she reads as coming up from inside it. */
+          /* Painted before the mark, so the ribbon reads as the rim she is
+             coming up through. */
           <g clipPath="url(#loader-loop-clip)">
             <motion.image
               href={riseSrc}

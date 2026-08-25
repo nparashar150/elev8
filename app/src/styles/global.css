@@ -55,6 +55,10 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   margin: 0;
@@ -129,7 +133,7 @@ h2 {
 /* The lockup is the nav wordmark at display size, nothing more. Proportions
    come from .wordmark-inner / .wordmark-eight, so they cannot diverge. */
 .loader-lockup {
-  font-size: min(64px, 9vw);
+  font-size: min(112px, 15vw);
   font-weight: 560;
   letter-spacing: -0.04em;
   line-height: 1;
@@ -207,9 +211,19 @@ h2 {
   position: sticky;
   top: 0;
   height: 100svh;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  overflow: hidden;
   box-shadow: 0 -18px 40px rgb(28 22 20 / 10%);
+}
+
+/* On a viewport too short to hold a block, stop stacking rather than clipping.
+   Cards fall back to normal flow so nothing is ever unreachable. */
+@media (max-height: 640px) {
+  .stack-card {
+    position: static;
+    height: auto;
+    overflow: visible;
+    box-shadow: none;
+  }
 }
 
 .stack-card-inner {
@@ -523,6 +537,10 @@ h2 {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .el-idle,
   .el-gesture,
   .pose-spinner,
@@ -543,6 +561,10 @@ h2 {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .el-idle,
   .el-gesture,
   .pose-spinner,
