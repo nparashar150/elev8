@@ -2,37 +2,28 @@ import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { Loader } from "./components/Loader";
 import { Wordmark } from "./components/Wordmark";
-import { OPENED } from "./lib/eight";
 import { Story } from "./components/Story";
 import { useIntro, type WordmarkTarget } from "./lib/useIntro";
 
-/*
- * The loop re-forms into the logotype, so the loader has to know where the "8"
- * actually renders. The hole sits at 50% across and 74.1% down the loader's own
- * box (viewBox 0 -56 120 116, hole centred at 60,30), and its drawn width is
- * 2 * 41.4 / 120 of that box.
- */
-const HOLE_X = 0.5;
-const HOLE_Y = (30 + 56) / 116;
-const HOLE_W = (OPENED.rx * 2) / 120;
-
 export default function App() {
   const reduced = useReducedMotion() === true;
-  const eightRef = useRef<SVGSVGElement>(null);
+  const wordmarkRef = useRef<HTMLAnchorElement>(null);
   const target = useRef<WordmarkTarget | null>(null);
 
+  // The whole lockup travels to the nav, so measure the whole wordmark and the
+  // loader's own box, and fly one onto the other.
   useLayoutEffect(() => {
     const measure = () => {
-      const node = eightRef.current;
-      const stage = document.querySelector(".loader-eight");
+      const node = wordmarkRef.current;
+      const stage = document.querySelector(".loader-lockup");
       if (!node || !stage) return;
       const mark = node.getBoundingClientRect();
       const box = stage.getBoundingClientRect();
       if (!mark.width || !box.width) return;
       target.current = {
-        x: mark.left + mark.width / 2 - (box.left + box.width * HOLE_X),
-        y: mark.top + mark.height / 2 - (box.top + box.height * HOLE_Y),
-        scale: mark.width / (box.width * HOLE_W),
+        x: mark.left + mark.width / 2 - (box.left + box.width / 2),
+        y: mark.top + mark.height / 2 - (box.top + box.height / 2),
+        scale: mark.width / box.width,
       };
     };
     measure();
@@ -60,28 +51,16 @@ export default function App() {
         <motion.div className="loader" style={{ opacity: intro.loaderOpacity }} aria-hidden="true">
           <motion.div
             className="loader-travel"
-            style={{
-              x: intro.stageX,
-              y: intro.stageY,
-              scale: intro.stageScale,
-              rotate: intro.stageRotate,
-            }}
+            style={{ x: intro.stageX, y: intro.stageY, scale: intro.stageScale }}
           >
-          <Loader
-            draw={intro.draw}
-            eightOpacity={intro.eightOpacity}
-            rx={intro.rx}
-            ry={intro.ry}
-            ringOpacity={intro.ringOpacity}
-            riseY={intro.riseY}
-          />
+          <Loader elev={intro.elev} draw={intro.draw} riseY={intro.riseY} />
           </motion.div>
         </motion.div>
       )}
 
       <motion.header className="nav" style={{ opacity: intro.pageOpacity }}>
-        <a className="wordmark" href="#hero">
-          <Wordmark eightRef={eightRef} draw={intro.markDraw} />
+        <a className="wordmark" href="#hero" ref={wordmarkRef}>
+          <Wordmark draw={intro.markDraw} />
         </a>
         <a className="nav-cta" href="mailto:hello@02100.studio?subject=Elev8">
           Let’s talk

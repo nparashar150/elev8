@@ -123,17 +123,24 @@ h2 {
   place-items: center;
   background: var(--cream);
   pointer-events: none;
+  color: var(--ink);
 }
 
-.loader-travel {
-  /* Scale converges on the hole, which is what lands on the logotype. */
-  transform-origin: 50% 74.1%;
+/* The lockup is the nav wordmark at display size, nothing more. Proportions
+   come from .wordmark-inner / .wordmark-eight, so they cannot diverge. */
+.loader-lockup {
+  font-size: min(64px, 9vw);
+  font-weight: 560;
+  letter-spacing: -0.04em;
+  line-height: 1;
 }
 
-/* The reference draws the eight 400px wide on a 1440 artboard. */
-.loader-eight {
-  width: min(400px, 62vw);
-  height: auto;
+.loader-elev-mask {
+  display: block;
+}
+
+/* Her ears reach above the mark's own box during the rise. */
+.loader-lockup .wordmark-eight {
   overflow: visible;
 }
 
@@ -305,6 +312,24 @@ h2 {
   box-shadow: none;
 }
 
+.cue .kbd {
+  animation: cue-nudge 2.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+@keyframes cue-nudge {
+  0%,
+  62%,
+  100% {
+    transform: translateY(0);
+  }
+  72% {
+    transform: translateY(3px);
+  }
+  84% {
+    transform: translateY(0);
+  }
+}
+
 .cue {
   display: flex;
   align-items: center;
@@ -382,6 +407,17 @@ h2 {
 
 .hero-el {
   width: min(300px, 42vw);
+  animation: el-sway 6s ease-in-out infinite, el-bob 3.4s ease-in-out infinite;
+}
+
+@keyframes el-bob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -6px;
+  }
 }
 
 /*
@@ -488,7 +524,9 @@ h2 {
 @media (prefers-reduced-motion: reduce) {
   .el-idle,
   .el-gesture,
-  .pose-spinner {
+  .pose-spinner,
+  .hero-el,
+  .cue .kbd {
     animation: none;
   }
 }
@@ -506,7 +544,9 @@ h2 {
 @media (prefers-reduced-motion: reduce) {
   .el-idle,
   .el-gesture,
-  .pose-spinner {
+  .pose-spinner,
+  .hero-el,
+  .cue .kbd {
     animation: none;
   }
 }

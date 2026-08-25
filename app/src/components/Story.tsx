@@ -277,10 +277,6 @@ export function Story({ intro, reduced }: Props) {
             >
               Let’s talk →
             </Button>
-            <p className="fine">
-              A pitch from <b>02100</b>, a design studio in Bengaluru. ·{" "}
-              <a href="assets/elev8-landing-page-final.pdf">Download the deck</a>
-            </p>
             {/* One last rise to close it out. */}
             <Hole width="min(240px, 52vw)">
               <img className="el-png el-idle" src={closeSrc} alt="" />
