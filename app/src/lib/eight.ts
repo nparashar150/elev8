@@ -1,9 +1,25 @@
 /**
- * The 8, uncoiled into one unbroken line. Sampled from a lemniscate so it
- * stroke-draws cleanly with Motion's pathLength.
+ * The 8, uncoiled. Taken verbatim from the Paper file's loading artboards
+ * (01 Trace through 03 Unwind), which all share a 120x60 viewBox.
  */
 export const EIGHT_D =
-  "M60.0 30.0L67.6 19.5L71.1 15.2L73.8 12.0L76.3 9.5L78.6 7.4L80.7 5.7L82.7 4.3L84.6 3.2L86.4 2.4L88.2 1.8L89.8 1.5L91.4 1.5L92.9 1.6L94.4 2.0L95.7 2.6L97.0 3.5L98.2 4.5L99.3 5.7L100.4 7.1L101.3 8.6L102.2 10.3L103.0 12.1L103.7 14.1L104.3 16.1L104.8 18.3L105.2 20.5L105.6 22.8L105.8 25.2L106.0 27.6L106.0 30.0L106.0 32.4L105.8 34.8L105.6 37.2L105.2 39.5L104.8 41.7L104.3 43.9L103.7 45.9L103.0 47.9L102.2 49.7L101.3 51.4L100.4 52.9L99.3 54.3L98.2 55.5L97.0 56.5L95.7 57.4L94.4 58.0L92.9 58.4L91.4 58.5L89.8 58.5L88.2 58.2L86.4 57.6L84.6 56.8L82.7 55.7L80.7 54.3L78.6 52.6L76.3 50.5L73.8 48.0L71.1 44.8L67.6 40.5L60.0 30.0L52.4 19.5L48.9 15.2L46.2 12.0L43.7 9.5L41.4 7.4L39.3 5.7L37.3 4.3L35.4 3.2L33.6 2.4L31.8 1.8L30.2 1.5L28.6 1.5L27.1 1.6L25.6 2.0L24.3 2.6L23.0 3.5L21.8 4.5L20.7 5.7L19.6 7.1L18.7 8.6L17.8 10.3L17.0 12.1L16.3 14.1L15.7 16.1L15.2 18.3L14.8 20.5L14.4 22.8L14.2 25.2L14.0 27.6L14.0 30.0L14.0 32.4L14.2 34.8L14.4 37.2L14.8 39.5L15.2 41.7L15.7 43.9L16.3 45.9L17.0 47.9L17.8 49.7L18.7 51.4L19.6 52.9L20.7 54.3L21.8 55.5L23.0 56.5L24.3 57.4L25.6 58.0L27.1 58.4L28.6 58.5L30.2 58.5L31.8 58.2L33.6 57.6L35.4 56.8L37.3 55.7L39.3 54.3L41.4 52.6L43.7 50.5L46.2 48.0L48.9 44.8L52.4 40.5L60.0 30.0Z";
+  "M108 30 L107.31 34.64 L105.35 38.85 L102.36 42.3 L98.68 44.8 L94.64 46.33 L90.5 46.94 L86.46 46.78 L82.63 46 L79.06 44.73 L75.77 43.11 L72.73 41.22 L69.91 39.16 L67.27 36.96 L64.77 34.68 L62.36 32.35 L60 30 L57.64 27.65 L55.23 25.32 L52.73 23.04 L50.09 20.84 L47.27 18.78 L44.23 16.89 L40.94 15.27 L37.37 14 L33.54 13.22 L29.5 13.06 L25.36 13.67 L21.32 15.2 L17.64 17.7 L14.65 21.15 L12.69 25.36 L12 30 L12.69 34.64 L14.65 38.85 L17.64 42.3 L21.32 44.8 L25.36 46.33 L29.5 46.94 L33.54 46.78 L37.37 46 L40.94 44.73 L44.23 43.11 L47.27 41.22 L50.09 39.16 L52.73 36.96 L55.23 34.68 L57.64 32.35 L60 30 L62.36 27.65 L64.77 25.32 L67.27 23.04 L69.91 20.84 L72.73 18.78 L75.77 16.89 L79.06 15.27 L82.63 14 L86.46 13.22 L90.5 13.06 L94.64 13.67 L98.68 15.2 L102.36 17.7 L105.35 21.15 L107.31 25.36 L108 30 Z";
 
-/** Petal ribbon weight, matching El's outline rather than a hairline. */
-export const EIGHT_STROKE = 7;
+/**
+ * Petal ribbon weight. The reference draws it at 8; thinned to 6 because at
+ * loader scale that reads heavy. The hole's rim is thinned to match so the
+ * ribbon stays one consistent width through the whole sequence.
+ */
+export const EIGHT_STROKE = 6;
+
+/**
+ * Loader geometry, converted into the 120x60 box the eight lives in.
+ *
+ * 03 Unwind draws the collapsed loop at rx 11 / ry 3.4 with a stroke of 8.
+ * 04 The hole draws rx 92 / ry 24 stroke 16 in a 240x100 box rendered at
+ * 360x140, which is rx 41.4 / ry 10.1 / stroke 7.2 once mapped across. The
+ * ribbon width barely changes, which is the point: it is one line throughout.
+ */
+export const UNWOUND = { rx: 11, ry: 3.4, ring: 6 };
+export const OPENED = { rx: 41.4, ry: 10.1, ring: 5.4 };
+export const EIGHT_CENTRE = { cx: 60, cy: 30 };

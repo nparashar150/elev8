@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from "motion/react";
 import { useEffect } from "react";
-import { Rise } from "./components/Rise";
+import { Loader } from "./components/Loader";
 import { Story } from "./components/Story";
 import { useIntro } from "./lib/useIntro";
 
@@ -21,7 +21,15 @@ export default function App() {
     <>
       {!intro.skip && !intro.done && (
         <motion.div className="loader" style={{ opacity: intro.loaderOpacity }} aria-hidden="true">
-          <Rise draw={intro.draw} />
+          <Loader
+            trackOpacity={intro.trackOpacity}
+            dashOffset={intro.dashOffset}
+            tracerOpacity={intro.tracerOpacity}
+            rx={intro.rx}
+            ry={intro.ry}
+            ringOpacity={intro.ringOpacity}
+            riseY={intro.riseY}
+          />
         </motion.div>
       )}
 

@@ -125,9 +125,11 @@ h2 {
   pointer-events: none;
 }
 
+/* The reference draws the eight 400px wide on a 1440 artboard. */
 .loader-eight {
-  width: min(200px, 34vw);
+  width: min(400px, 62vw);
   height: auto;
+  overflow: visible;
 }
 
 /* ---------- Chrome ---------- */
@@ -718,5 +720,87 @@ h2 {
 
   .poses li {
     flex: 1 1 40%;
+  }
+}
+
+/* ---------- Micro-interactions ---------- */
+
+/*
+ * Small, consistent feedback rather than decoration: everything interactive
+ * lifts a little on hover and gives on press, on one easing curve.
+ */
+.marks button,
+.cta,
+.btn,
+.switch button,
+.numbered li,
+.expand-trigger {
+  transition:
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.marks button:hover {
+  transform: translateY(-3px);
+}
+
+.marks button:active {
+  transform: translateY(-1px) scale(0.97);
+}
+
+.cta:hover,
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.cta:active,
+.btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* List rows warm slightly under the pointer so long lists feel alive. */
+.numbered li:hover {
+  background: color-mix(in srgb, currentColor 5%, transparent);
+}
+
+.expand-trigger:hover {
+  opacity: 0.72;
+}
+
+/* Links draw their underline rather than switching it on. */
+.fine a,
+.line a {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fine a:hover,
+.line a:hover {
+  background-size: 100% 1px;
+}
+
+/* Focus is never removed, only made to match the palette. */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marks button,
+  .cta,
+  .btn,
+  .switch button,
+  .numbered li,
+  .expand-trigger,
+  .fine a,
+  .line a {
+    transition: none;
   }
 }
