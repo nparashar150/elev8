@@ -1,4 +1,4 @@
-import { Button, ColorSwatch, Kbd } from "@heroui/react";
+import { Button, Chip, ColorSwatch, Kbd } from "@heroui/react";
 import { motion } from "motion/react";
 import { useEffect } from "react";
 import closeSrc from "../assets/el-rise.png";
@@ -22,13 +22,13 @@ type Props = {
 /** Card order, so the nav can take the colour of whichever card is on top. */
 export const DECK_TONES = [
   "cream",
+  "cream",
   "kalava",
   "clear",
-  "cream",
   "fuel",
-  "plum",
-  "long",
   "know",
+  "long",
+  "plum",
   "look",
   "cream",
 ] as const;
@@ -39,7 +39,7 @@ const OFFER: [string, string][] = [
   ["App", "iOS and Android, onboarding that survives the kit."],
   ["Backend", "APIs, consent, audit logs, India residency."],
   ["Social", "Instagram, YouTube, LinkedIn. One voice."],
-  ["Content", "The editorial engine. Recommended add-on."],
+  ["Content", "The editorial engine behind everything."],
 ];
 
 const PHASES: [string, string][] = [
@@ -66,6 +66,28 @@ const PALETTE: [string, string][] = [
   ["#4A3B3F", "Warm Plum"],
 ];
 
+/**
+ * The Waiting pose's companion mark. HeroUI's Spinner draws a gradient, which
+ * is right for a product and wrong here: bible SS08 wants "a small separate
+ * abstract spinner, drawn in her line colour". So it is drawn in Petal, at the
+ * size and position the artwork had it, lifted out by tools/build-assets.py.
+ */
+function PoseSpinner() {
+  return (
+    <svg className="pose-spinner" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <circle
+        cx="16"
+        cy="16"
+        r="13"
+        stroke="var(--petal)"
+        strokeWidth="5"
+        strokeLinecap="round"
+        strokeDasharray="46 36"
+      />
+    </svg>
+  );
+}
+
 function Numbered({ items }: { items: [string, string][] }) {
   return (
     <ol className="numbered">
@@ -73,7 +95,14 @@ function Numbered({ items }: { items: [string, string][] }) {
         <li key={title}>
           <span>{String(index + 1).padStart(2, "0")}</span>
           <b>{title}</b>
-          <i>{copy}</i>
+          <i>
+            {copy}
+            {title === "Content" && (
+              <Chip className="chip-soft" size="sm">
+                <Chip.Label>recommended</Chip.Label>
+              </Chip>
+            )}
+          </i>
         </li>
       ))}
     </ol>
@@ -127,6 +156,13 @@ export function Story({ intro, reduced }: Props) {
       </StackCard>
 
       <StackCard>
+        <Block id="elevate" tone="cream" kicker="Six panels. A different door.">
+          <h2>What are you trying to elevate?</h2>
+          <Verticals />
+        </Block>
+      </StackCard>
+
+      <StackCard>
         <Block id="honest" tone="kalava" kicker="Where we start" watermark="move">
           <h2>You already said it.</h2>
           <p className="line">
@@ -149,13 +185,6 @@ export function Story({ intro, reduced }: Props) {
       </StackCard>
 
       <StackCard>
-        <Block id="elevate" tone="cream" kicker="Six panels. A different door.">
-          <h2>What are you trying to elevate?</h2>
-          <Verticals />
-        </Block>
-      </StackCard>
-
-      <StackCard>
         <Block id="voice" tone="fuel" kicker="Same science" watermark="fuel">
           <h2>Different sentence.</h2>
           <Voices />
@@ -163,7 +192,7 @@ export function Story({ intro, reduced }: Props) {
       </StackCard>
 
       <StackCard>
-        <Block id="el" tone="plum" kicker="The character">
+        <Block id="el" tone="know" kicker="The character">
           <h2>Meet El.</h2>
           <p className="line">She’s the 8 in your logo, stepped out.</p>
           {/* Rabbit by rabbit: each pose rises out of its own hole in turn. */}
@@ -183,7 +212,12 @@ export function Story({ intro, reduced }: Props) {
                 }}
               >
                 <Hole width="100%" stagger>
-                  <img className="el-idle" src={EL_SRC[pose]} alt="" />
+                  <span className="pose-art">
+                    <img className={`el-gesture el-gesture-${pose}`} src={EL_SRC[pose]} alt="" />
+                    {/* Bible SS08: the spinner is a separate mark beside her,
+                        never part of her body. */}
+                    {pose === "waiting" && <PoseSpinner />}
+                  </span>
                 </Hole>
                 <span>{label}</span>
               </motion.li>
@@ -215,7 +249,7 @@ export function Story({ intro, reduced }: Props) {
       </StackCard>
 
       <StackCard>
-        <Block id="offer" tone="know" kicker="What you get" watermark="know">
+        <Block id="offer" tone="plum" kicker="What you get" watermark="know">
           <h2>Six things. One team.</h2>
           <Numbered items={OFFER} />
         </Block>

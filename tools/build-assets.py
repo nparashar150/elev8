@@ -92,11 +92,61 @@ def hole_box(im: Image.Image):
     return min(xs), min(ys), max(xs), max(ys)
 
 
+def strip_spinner(im: Image.Image):
+    """Remove the spinner baked beside the Waiting pose, and report where it was.
+
+    Bible SS08 calls it "a small separate abstract spinner, drawn in her line
+    colour, not part of her body". Baked into a raster it cannot spin, so it is
+    lifted out here and re-drawn live at the same spot.
+    """
+    from collections import deque
+
+    im = im.convert("RGBA")
+    w, h = im.size
+    px = im.load()
+    seen = [[False] * h for _ in range(w)]
+    blobs = []
+    for y in range(h):
+        for x in range(w):
+            if px[x, y][3] < 60 or seen[x][y]:
+                continue
+            queue, points = deque([(x, y)]), []
+            seen[x][y] = True
+            while queue:
+                cx, cy = queue.popleft()
+                points.append((cx, cy))
+                for dx in (-1, 0, 1):
+                    for dy in (-1, 0, 1):
+                        nx, ny = cx + dx, cy + dy
+                        if 0 <= nx < w and 0 <= ny < h and not seen[nx][ny] and px[nx, ny][3] >= 60:
+                            seen[nx][ny] = True
+                            queue.append((nx, ny))
+            blobs.append(points)
+
+    if len(blobs) < 2:
+        return im, None
+    blobs.sort(key=len, reverse=True)
+    spinner = blobs[1]
+    xs = [p[0] for p in spinner]
+    ys = [p[1] for p in spinner]
+    for cx, cy in spinner:
+        px[cx, cy] = (0, 0, 0, 0)
+    return im, {
+        "cx": (min(xs) + max(xs)) / 2 / w,
+        "cy": (min(ys) + max(ys)) / 2 / h,
+        "size": (max(xs) - min(xs)) / w,
+    }
+
+
 def build_el():
     out = ASSETS / "el"
     out.mkdir(parents=True, exist_ok=True)
+    spinner_at = None
     for pose in POSES:
-        filled = fill_interior(Image.open(DESIGN / "el" / f"{pose}.png"))
+        source = Image.open(DESIGN / "el" / f"{pose}.png")
+        if pose == "waiting":
+            source, spinner_at = strip_spinner(source)
+        filled = fill_interior(source)
         # Pin every pose's hole to the bible value so the drawn preload hole
         # and the baked-in sprite holes are the same colour.
         px = filled.load()
@@ -106,6 +156,12 @@ def build_el():
                     px[x, y] = (*PLUM, px[x, y][3])
         filled.save(out / f"{pose}.png")
         print(f"el/{pose}.png {filled.size}")
+
+    if spinner_at:
+        print(
+            f"waiting spinner lifted: cx={spinner_at['cx']:.4f} "
+            f"cy={spinner_at['cy']:.4f} size={spinner_at['size']:.4f}"
+        )
 
     # The rising El: neutral, hole knocked out, cropped at the hole's centre line.
     neutral = fill_interior(Image.open(DESIGN / "el" / "neutral.png"))

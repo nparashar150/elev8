@@ -164,6 +164,20 @@ h2 {
   letter-spacing: -0.04em;
 }
 
+.wordmark-inner {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1px;
+}
+
+/* Sized off the cap height so it sits as a letter, not an icon. */
+.wordmark-eight {
+  height: 0.82em;
+  width: auto;
+  align-self: center;
+  overflow: visible;
+}
+
 .nav-cta {
   font-size: 14px;
   font-weight: 500;
@@ -187,6 +201,7 @@ h2 {
   top: 0;
   height: 100svh;
   overflow: hidden;
+  box-shadow: 0 -18px 40px rgb(28 22 20 / 10%);
 }
 
 .stack-card-inner {
@@ -370,6 +385,94 @@ h2 {
 }
 
 /*
+ * Bible SS08: gesture and expression change, the silhouette never does. Each
+ * pose idles differently, pivoting at the hole's rim so the ears travel most.
+ *
+ * ponytail: these move the whole sprite, because the export is a flat raster
+ * with no separated ear layer. Independent ears need layered art.
+ */
+.el-gesture {
+  transform-origin: 50% 94%;
+}
+
+.el-gesture-neutral {
+  animation: el-sway 6s ease-in-out infinite;
+}
+
+/* One ear tilts, eyes cast up and aside: a slow hold, not a wobble. */
+.el-gesture-thinking {
+  animation: el-think 7s ease-in-out infinite;
+}
+
+/* Fully glad. A brighter double-tip, still inside the calm register. */
+.el-gesture-celebrating {
+  animation: el-glad 4.5s ease-in-out infinite;
+}
+
+/* She stays fully herself while waiting. The spinner does the work. */
+.el-gesture-waiting {
+  animation: el-sway 7.5s ease-in-out infinite;
+}
+
+@keyframes el-think {
+  0%,
+  100% {
+    transform: rotate(-2.4deg);
+  }
+  45%,
+  62% {
+    transform: rotate(-3.6deg);
+  }
+}
+
+@keyframes el-glad {
+  0%,
+  100% {
+    transform: rotate(-1.6deg);
+  }
+  30% {
+    transform: rotate(2.6deg);
+  }
+  55% {
+    transform: rotate(-0.8deg);
+  }
+  78% {
+    transform: rotate(1.8deg);
+  }
+}
+
+.pose-art {
+  position: relative;
+  display: block;
+}
+
+/* Sits exactly where the baked-in one was, lifted out by tools/build-assets.py:
+   cx 89.7%, cy 58.6%, 12.1% of the sprite's width. */
+.pose-spinner {
+  position: absolute;
+  left: 89.7%;
+  top: 58.6%;
+  width: 12.1%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  animation: pose-spin 1.4s linear infinite;
+}
+
+@keyframes pose-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.chip-soft {
+  margin-left: 8px;
+  vertical-align: middle;
+  background: color-mix(in srgb, currentColor 14%, transparent);
+  color: inherit;
+  border: 0;
+}
+
+/*
  * El idles rather than sitting dead still: a slow sway pivoting at the hole's
  * rim, so the ears travel furthest. Bible §04 register applies here too, calm
  * and slow, never a bounce.
@@ -383,7 +486,9 @@ h2 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .el-idle {
+  .el-idle,
+  .el-gesture,
+  .pose-spinner {
     animation: none;
   }
 }
@@ -399,7 +504,9 @@ h2 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .el-idle {
+  .el-idle,
+  .el-gesture,
+  .pose-spinner {
     animation: none;
   }
 }

@@ -22,10 +22,19 @@ const ENTRANCE_ENDS = 1440;
 const FLOOR = ENTRANCE_ENDS + 260;
 const CEILING = 2600;
 
-/** Once per session, unless ?intro is present, which forces it for demos. */
+/**
+ * Plays on every load while we are still working on it.
+ *
+ * Flip this to false to go back to once-per-session, which is what returning
+ * visitors want: a preloader on every reload is a tax on the one person we
+ * need to read this. ?intro forces it either way.
+ */
+const PLAY_EVERY_LOAD = true;
+
 function shouldPlay() {
   try {
     if (new URLSearchParams(location.search).has("intro")) return true;
+    if (PLAY_EVERY_LOAD) return true;
     return sessionStorage.getItem(SEEN_KEY) !== "1";
   } catch {
     return true;
@@ -80,6 +89,9 @@ export function useIntro(reducedMotion: boolean, target: RefObject<WordmarkTarge
   const stageX = useMotionValue(0);
   const stageY = useMotionValue(0);
   const stageScale = useMotionValue(1);
+  const stageRotate = useMotionValue(0);
+  // The logotype signs itself once the loop has landed on it.
+  const markDraw = useMotionValue(skip ? 1 : 0);
   const loaderOpacity = useMotionValue(skip ? 0 : 1);
   const pageOpacity = useMotionValue(skip ? 1 : 0);
   const [done, setDone] = useState(skip);
@@ -116,7 +128,7 @@ export function useIntro(reducedMotion: boolean, target: RefObject<WordmarkTarge
     const exit = () => {
       if (cancelled) return;
       const mark = target.current;
-      const move = { duration: 0.46, ease: SETTLE };
+      const move = { duration: 0.72, ease: SETTLE };
 
       // She steps back down first, then the loop travels alone.
       run(animate(riseY, 462, { duration: 0.28, ease: LEAVE }));
@@ -128,13 +140,17 @@ export function useIntro(reducedMotion: boolean, target: RefObject<WordmarkTarge
           run(animate(stageX, mark.x, move));
           run(animate(stageY, mark.y, move));
           run(animate(stageScale, mark.scale, move));
+          // Uncoiled becomes coiled: a lemniscate turned 90 degrees is an 8.
+          run(animate(stageRotate, 90, move));
         } else {
           // Nothing measured: close in place rather than fly somewhere wrong.
           run(animate(rx, 0, move));
           run(animate(ry, 0, move));
         }
-        run(animate(loaderOpacity, 0, { duration: 0.26, delay: 0.28, ease: LEAVE }));
-        window.setTimeout(finish, 620);
+        run(animate(loaderOpacity, 0, { duration: 0.3, delay: 0.5, ease: LEAVE }));
+        // It arrives, then traces itself once, the way it did at full size.
+        run(animate(markDraw, 1, { duration: 0.9, delay: 0.66, ease: ENTER }));
+        window.setTimeout(finish, 900);
       }, 260);
     };
 
@@ -170,6 +186,8 @@ export function useIntro(reducedMotion: boolean, target: RefObject<WordmarkTarge
     stageX,
     stageY,
     stageScale,
+    stageRotate,
+    markDraw,
     loaderOpacity,
     pageOpacity,
   ]);
@@ -184,6 +202,8 @@ export function useIntro(reducedMotion: boolean, target: RefObject<WordmarkTarge
     stageX,
     stageY,
     stageScale,
+    stageRotate,
+    markDraw,
     loaderOpacity,
     pageOpacity,
     done,

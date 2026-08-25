@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { Loader } from "./components/Loader";
+import { Wordmark } from "./components/Wordmark";
 import { OPENED } from "./lib/eight";
 import { Story } from "./components/Story";
 import { useIntro, type WordmarkTarget } from "./lib/useIntro";
@@ -17,7 +18,7 @@ const HOLE_W = (OPENED.rx * 2) / 120;
 
 export default function App() {
   const reduced = useReducedMotion() === true;
-  const eightRef = useRef<HTMLSpanElement>(null);
+  const eightRef = useRef<SVGSVGElement>(null);
   const target = useRef<WordmarkTarget | null>(null);
 
   useLayoutEffect(() => {
@@ -59,7 +60,12 @@ export default function App() {
         <motion.div className="loader" style={{ opacity: intro.loaderOpacity }} aria-hidden="true">
           <motion.div
             className="loader-travel"
-            style={{ x: intro.stageX, y: intro.stageY, scale: intro.stageScale }}
+            style={{
+              x: intro.stageX,
+              y: intro.stageY,
+              scale: intro.stageScale,
+              rotate: intro.stageRotate,
+            }}
           >
           <Loader
             draw={intro.draw}
@@ -75,7 +81,7 @@ export default function App() {
 
       <motion.header className="nav" style={{ opacity: intro.pageOpacity }}>
         <a className="wordmark" href="#hero">
-          Elev<span ref={eightRef}>8</span>
+          <Wordmark eightRef={eightRef} draw={intro.markDraw} />
         </a>
         <a className="nav-cta" href="mailto:hello@02100.studio?subject=Elev8">
           Let’s talk
