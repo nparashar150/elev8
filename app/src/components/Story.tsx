@@ -23,9 +23,9 @@ export const DECK_TONES = [
   "cream",
   "kalava",
   "clear",
-  "plum",
   "cream",
   "fuel",
+  "plum",
   "long",
   "know",
   "look",
@@ -144,6 +144,20 @@ export function Story({ intro, reduced }: Props) {
       </StackCard>
 
       <StackCard>
+        <Block id="elevate" tone="cream" kicker="Six panels. A different door.">
+          <h2>What are you trying to elevate?</h2>
+          <Verticals />
+        </Block>
+      </StackCard>
+
+      <StackCard>
+        <Block id="voice" tone="fuel" kicker="Same science" watermark="fuel">
+          <h2>Different sentence.</h2>
+          <Voices />
+        </Block>
+      </StackCard>
+
+      <StackCard>
         <Block id="el" tone="plum" kicker="The character">
           <h2>Meet El.</h2>
           <p className="line">She’s the 8 in your logo, stepped out.</p>
@@ -170,20 +184,6 @@ export function Story({ intro, reduced }: Props) {
               </motion.li>
             ))}
           </motion.ul>
-        </Block>
-      </StackCard>
-
-      <StackCard>
-        <Block id="elevate" tone="cream" kicker="Six panels. A different door.">
-          <h2>What are you trying to elevate?</h2>
-          <Verticals />
-        </Block>
-      </StackCard>
-
-      <StackCard>
-        <Block id="voice" tone="fuel" kicker="Same science" watermark="fuel">
-          <h2>Different sentence.</h2>
-          <Voices />
         </Block>
       </StackCard>
 
