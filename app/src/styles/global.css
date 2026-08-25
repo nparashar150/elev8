@@ -115,24 +115,18 @@ h2 {
 
 /* ---------- Preload ---------- */
 
-.preload {
+.loader {
   position: fixed;
   inset: 0;
   z-index: 50;
+  display: grid;
+  place-items: center;
   background: var(--cream);
   pointer-events: none;
 }
 
-.preload-stage {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: min(360px, 46vw);
-  translate: -50% -50%;
-}
-
-.preload-rise {
-  width: 100%;
+.loader-eight {
+  width: min(200px, 34vw);
   height: auto;
 }
 
@@ -175,10 +169,17 @@ h2 {
  * used on a block, and which one is set per block by measured contrast, not by
  * eye. Muted variants are alpha of the on-colour so they inherit correctly.
  */
-/* Stacked cards: each sticks at the top and the next slides over it. */
+/* Stacked cards: the slot keeps the layout position, the card inside sticks,
+   and the next slot slides over it. */
+.stack-slot {
+  position: relative;
+}
+
 .stack-card {
   position: sticky;
   top: 0;
+  height: 100svh;
+  overflow: hidden;
 }
 
 .stack-card-inner {
@@ -186,6 +187,7 @@ h2 {
 }
 
 .block {
+  height: 100%;
   min-height: 100svh;
   display: flex;
   align-items: center;
@@ -194,8 +196,38 @@ h2 {
 
 .block-inner {
   width: 100%;
-  max-width: 1120px;
+  max-width: 1180px;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(24px, 5vw, 80px);
+  align-items: center;
+}
+
+.block-copy {
+  min-width: 0;
+}
+
+/* The block's own mark, large and quiet, so the right half carries the colour
+   argument instead of sitting empty. */
+.block-mark {
+  opacity: 0.16;
+  pointer-events: none;
+}
+
+.block-mark .mark {
+  width: clamp(180px, 30vw, 460px);
+  height: auto;
+}
+
+@media (max-width: 1024px) {
+  .block-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .block-mark {
+    display: none;
+  }
 }
 
 .block-on-cream {
@@ -242,6 +274,13 @@ h2 {
 /* One body size across every block, so nothing reads as an odd one out. */
 :root {
   --text-body: clamp(16px, 1.35vw, 19px);
+}
+
+.cue .kbd {
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--on-muted);
+  box-shadow: none;
 }
 
 .cue {
@@ -330,6 +369,41 @@ h2 {
 .el-idle {
   animation: el-sway 6s ease-in-out infinite;
   transform-origin: 50% 92%;
+}
+
+/* A hello on arrival: two clear tips of the whole body, then the idle sway
+   takes over. ponytail: the export is a flat raster with no separated ear
+   layer, so this waves all of her. Real ear-waving needs layered art. */
+.el-wave {
+  animation: el-wave 1.5s cubic-bezier(0.22, 1, 0.36, 1) 1 both, el-sway 6s ease-in-out 1.5s infinite;
+  transform-origin: 50% 92%;
+}
+
+@keyframes el-wave {
+  0% {
+    transform: rotate(0deg);
+  }
+  22% {
+    transform: rotate(-9deg);
+  }
+  46% {
+    transform: rotate(7deg);
+  }
+  68% {
+    transform: rotate(-5deg);
+  }
+  86% {
+    transform: rotate(2deg);
+  }
+  100% {
+    transform: rotate(-1.1deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .el-wave {
+    animation: none;
+  }
 }
 
 @keyframes el-sway {

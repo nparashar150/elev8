@@ -3,22 +3,26 @@ import { MARKS } from "../lib/marks";
 import { ENTER } from "../lib/motion";
 
 /**
- * A vertical's mark, drawn rather than shown. Each shape animates the way the
- * bible describes it, so the motion carries the same argument as the drawing:
+ * A vertical's mark, drawn rather than shown, using Motion's pathLength so the
+ * outline is traced on before the fill arrives. Each shape animates the way the
+ * bible argues for it:
  *
- *   MOVE  a stroke drawn left to right, caught mid-air
- *   CLEAR a spiral unwinding from a tight centre outward
- *   LONG  a complete form arriving whole
+ *   MOVE  a stroke caught mid-air
+ *   CLEAR a spiral unwinding from a tight centre
+ *   LONG  a complete form, no start and no end
  *   FUEL  grown, not drawn with a ruler
  *   KNOW  single markers, strung one at a time into a pattern
- *   LOOK  one drop, forming
+ *   LOOK  one drop
+ *
+ * The geometry comes from tools/trace-marks.py; the export is a raster, and a
+ * bitmap cannot be stroke-drawn.
  */
-type Props = { id: string; colour: string; play: boolean; size?: number };
+type Props = { id: string; colour: string; size?: number; delay?: number };
 
-export function Mark({ id, colour, play, size = 100 }: Props) {
+const DRAW = { duration: 1.1, ease: ENTER };
+
+export function Mark({ id, colour, size = 100, delay = 0 }: Props) {
   const mark = MARKS[id];
-  const state = play ? "show" : "hide";
-  const clipId = `mark-clip-${id}`;
 
   return (
     <motion.svg
@@ -27,23 +31,10 @@ export function Mark({ id, colour, play, size = 100 }: Props) {
       width={size}
       height={size}
       initial="hide"
-      animate={state}
+      whileInView="show"
+      viewport={{ once: true, amount: 0.4 }}
       aria-hidden="true"
     >
-      {mark.kind === "circle" && (
-        <motion.circle
-          cx={mark.cx}
-          cy={mark.cy}
-          r={mark.r}
-          fill={colour}
-          style={{ transformBox: "fill-box", transformOrigin: "center" }}
-          variants={{
-            hide: { scale: 0 },
-            show: { scale: 1, transition: { duration: 0.5, ease: ENTER } },
-          }}
-        />
-      )}
-
       {mark.kind === "dots" &&
         mark.dots.map((dot, index) => (
           <motion.circle
@@ -52,50 +43,65 @@ export function Mark({ id, colour, play, size = 100 }: Props) {
             cy={dot.cy}
             r={dot.r}
             fill={colour}
-            style={{ transformBox: "fill-box", transformOrigin: "center" }}
             variants={{
               hide: { scale: 0, opacity: 0 },
               show: {
                 scale: 1,
                 opacity: 1,
-                transition: { duration: 0.26, delay: index * 0.035, ease: ENTER },
+                transition: { duration: 0.26, delay: delay + index * 0.045, ease: ENTER },
               },
             }}
           />
         ))}
 
+      {mark.kind === "circle" && (
+        <>
+          <motion.circle
+            cx={mark.cx}
+            cy={mark.cy}
+            r={mark.r}
+            fill="none"
+            stroke={colour}
+            strokeWidth={2.5}
+            variants={{
+              hide: { pathLength: 0 },
+              show: { pathLength: 1, transition: { ...DRAW, delay } },
+            }}
+          />
+          <motion.circle
+            cx={mark.cx}
+            cy={mark.cy}
+            r={mark.r}
+            fill={colour}
+            variants={{
+              hide: { opacity: 0 },
+              show: { opacity: 1, transition: { duration: 0.45, delay: delay + 0.75, ease: ENTER } },
+            }}
+          />
+        </>
+      )}
+
       {mark.kind === "path" && (
         <>
-          <defs>
-            <clipPath id={clipId}>
-              {/* MOVE sweeps left to right; the rest open out from their centre. */}
-              {id === "move" ? (
-                <motion.rect
-                  x="0"
-                  y="0"
-                  height="100"
-                  width="100"
-                  style={{ transformBox: "view-box", transformOrigin: "left center" }}
-                  variants={{
-                    hide: { scaleX: 0 },
-                    show: { scaleX: 1, transition: { duration: 0.65, ease: ENTER } },
-                  }}
-                />
-              ) : (
-                <motion.circle
-                  cx="50"
-                  cy="50"
-                  r="72"
-                  style={{ transformBox: "view-box", transformOrigin: "center" }}
-                  variants={{
-                    hide: { scale: 0 },
-                    show: { scale: 1, transition: { duration: 0.7, ease: ENTER } },
-                  }}
-                />
-              )}
-            </clipPath>
-          </defs>
-          <path d={mark.d} fill={colour} clipPath={`url(#${clipId})`} />
+          <motion.path
+            d={mark.d}
+            fill="none"
+            stroke={colour}
+            strokeWidth={2}
+            strokeLinecap="round"
+            variants={{
+              hide: { pathLength: 0 },
+              show: { pathLength: 1, transition: { ...DRAW, delay } },
+            }}
+          />
+          <motion.path
+            d={mark.d}
+            fill={colour}
+            variants={{
+              hide: { opacity: 0 },
+              show: { opacity: 1, transition: { duration: 0.5, delay: delay + 0.7, ease: ENTER } },
+            }}
+          />
         </>
       )}
     </motion.svg>

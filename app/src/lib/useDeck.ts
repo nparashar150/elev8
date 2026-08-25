@@ -11,6 +11,7 @@ export function useDeck() {
   const [active, setActive] = useState(0);
 
   useEffect(() => {
+    const slots = () => Array.from(document.querySelectorAll<HTMLElement>(".stack-slot"));
     const cards = () => Array.from(document.querySelectorAll<HTMLElement>(".stack-card"));
 
     const read = () => {
@@ -23,7 +24,7 @@ export function useDeck() {
     };
 
     const goTo = (index: number) => {
-      const list = cards();
+      const list = slots();
       const target = list[Math.max(0, Math.min(list.length - 1, index))];
       if (target) window.scrollTo({ top: target.offsetTop, behavior: "smooth" });
     };
@@ -34,7 +35,7 @@ export function useDeck() {
       if (el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName))) return;
       if (event.metaKey || event.ctrlKey || event.altKey) return;
 
-      const list = cards();
+      const list = slots();
       let index: number | null = null;
       if (event.key === "ArrowDown" || event.key === "PageDown") index = active + 1;
       else if (event.key === "ArrowUp" || event.key === "PageUp") index = active - 1;

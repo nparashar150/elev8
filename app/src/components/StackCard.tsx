@@ -18,11 +18,16 @@ export function StackCard({ children, last = false }: { children: ReactNode; las
   const brightness = useTransform(scrollYProgress, [0, 1], last ? [1, 1] : [1, 0.72]);
   const filter = useTransform(brightness, (value) => `brightness(${value})`);
 
+  // The slot holds the layout position; the card inside it is what sticks.
+  // Reading offsetTop off a sticky element gives its current stuck offset, not
+  // where it actually lives, so navigation needs the slot.
   return (
-    <div ref={ref} className="stack-card">
-      <motion.div className="stack-card-inner" style={{ scale, filter }}>
-        {children}
-      </motion.div>
+    <div ref={ref} className="stack-slot">
+      <div className="stack-card">
+        <motion.div className="stack-card-inner" style={{ scale, filter }}>
+          {children}
+        </motion.div>
+      </div>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Mark } from "./Mark";
 
 /**
  * A full-bleed colour block. The palette is the page structure, not a swatch
@@ -30,17 +31,26 @@ type Props = {
   id: string;
   tone: keyof typeof TONES;
   kicker?: string;
+  /** The block's own mark, drawn large and quiet in the right half. */
+  watermark?: string;
   children: ReactNode;
 };
 
-export function Block({ id, tone, kicker, children }: Props) {
+export function Block({ id, tone, kicker, watermark, children }: Props) {
   const { ground, on } = TONES[tone];
 
   return (
     <section id={id} className={`block block-on-${on}`} style={{ background: ground }}>
       <div className="block-inner">
-        {kicker && <p className="kicker">{kicker}</p>}
-        {children}
+        <div className="block-copy">
+          {kicker && <p className="kicker">{kicker}</p>}
+          {children}
+        </div>
+        {watermark && (
+          <div className="block-mark" aria-hidden="true">
+            <Mark id={watermark} colour="currentColor" size={520} delay={0.15} />
+          </div>
+        )}
       </div>
     </section>
   );

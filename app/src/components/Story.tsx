@@ -1,5 +1,6 @@
 import { Button, ColorSwatch, Kbd } from "@heroui/react";
 import { motion } from "motion/react";
+import { useEffect } from "react";
 import riseSrc from "../assets/el-rise.png";
 import { ENTER } from "../lib/motion";
 import { useDeck } from "../lib/useDeck";
@@ -82,13 +83,19 @@ export function Story({ intro, reduced }: Props) {
   const active = useDeck();
   const tone = TONES[DECK_TONES[active] ?? "cream"];
 
+  // The nav is a sibling of <main>, not a descendant, so a variable set on the
+  // page cannot reach it. It goes on the root element instead.
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      "--nav-on",
+      tone.on === "cream" ? "var(--color-cream)" : "var(--color-ink)",
+    );
+  }, [tone]);
+
   return (
     <motion.main
       className="page"
-      style={{
-        opacity: intro.pageOpacity,
-        ["--nav-on" as string]: tone.on === "cream" ? "var(--color-cream)" : "var(--color-ink)",
-      }}
+      style={{ opacity: intro.pageOpacity }}
     >
       <StackCard>
         <Block id="hero" tone="cream" kicker="Health Centric → Elev8">
@@ -106,13 +113,16 @@ export function Story({ intro, reduced }: Props) {
                 Start reading
               </p>
             </div>
-            <img className="el-png el-idle hero-el" src={riseSrc} alt="" />
+            {/* She comes up out of the hole here too, not just at the close. */}
+            <Hole width="min(300px, 42vw)">
+              <img className="el-png el-wave" src={riseSrc} alt="" />
+            </Hole>
           </div>
         </Block>
       </StackCard>
 
       <StackCard>
-        <Block id="honest" tone="kalava" kicker="Where we start">
+        <Block id="honest" tone="kalava" kicker="Where we start" watermark="move">
           <h2>You already said it.</h2>
           <p className="line">
             <em>“Elevate your life.”</em> Best line on your site. Buried under four database statistics.
@@ -122,7 +132,7 @@ export function Story({ intro, reduced }: Props) {
       </StackCard>
 
       <StackCard>
-        <Block id="problem" tone="clear" kicker="The brand problem">
+        <Block id="problem" tone="clear" kicker="The brand problem" watermark="clear">
           <h2>Exclusive, or inclusive.</h2>
           <p className="pull pull-muted">We don’t pick.</p>
           <p className="pull">Your baseline is yours alone. The wish to rise is everyone’s.</p>
@@ -171,14 +181,14 @@ export function Story({ intro, reduced }: Props) {
       </StackCard>
 
       <StackCard>
-        <Block id="voice" tone="fuel" kicker="Same science">
+        <Block id="voice" tone="fuel" kicker="Same science" watermark="fuel">
           <h2>Different sentence.</h2>
           <Voices />
         </Block>
       </StackCard>
 
       <StackCard>
-        <Block id="kit" tone="long" kicker="The kit">
+        <Block id="kit" tone="long" kicker="The kit" watermark="long">
           <h2>A brand you can hand to anyone.</h2>
           <ul className="palette">
             {PALETTE.map(([hex, name]) => (
@@ -200,14 +210,14 @@ export function Story({ intro, reduced }: Props) {
       </StackCard>
 
       <StackCard>
-        <Block id="offer" tone="know" kicker="What you get">
+        <Block id="offer" tone="know" kicker="What you get" watermark="know">
           <h2>Six things. One team.</h2>
           <Numbered items={OFFER} />
         </Block>
       </StackCard>
 
       <StackCard>
-        <Block id="run" tone="look" kicker="How we’d run it">
+        <Block id="run" tone="look" kicker="How we’d run it" watermark="look">
           <h2>Five phases. One line.</h2>
           <Numbered items={PHASES} />
           <p className="line">Phase 3 is where a mascot becomes a reason to renew.</p>

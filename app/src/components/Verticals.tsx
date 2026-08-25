@@ -32,13 +32,7 @@ export function Verticals() {
               style={{ ["--tile" as string]: vertical.colour }}
             >
               {/* Keyed on active so the selected mark redraws itself. */}
-              <Mark
-                key={`${vertical.id}-${vertical.id === active}`}
-                id={vertical.id}
-                colour={vertical.colour}
-                play
-                size={72}
-              />
+              <Mark key={`${vertical.id}-${active}`} id={vertical.id} colour={vertical.colour} size={72} />
               <span className="mark-label">{vertical.name}</span>
             </button>
           </li>
