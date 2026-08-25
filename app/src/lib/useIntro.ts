@@ -130,16 +130,23 @@ export function useIntro(reducedMotion: boolean, target: RefObject<WordmarkTarge
       if (!cancelled) exit();
     });
 
-    window.addEventListener("keydown", finish, { once: true });
-    window.addEventListener("pointerdown", finish, { once: true });
-    window.addEventListener("wheel", finish, { once: true, passive: true });
+    /*
+     * Skip on input, but only on a real gesture and not immediately.
+     * A synthetic event, or a trackpad still coasting from the previous page,
+     * would otherwise end the loader before it had drawn a single frame.
+     */
+    const opened = performance.now();
+    const onInput = (event: Event) => {
+      if (!event.isTrusted || performance.now() - opened < 400) return;
+      finish();
+    };
+    const inputs = ["keydown", "pointerdown", "wheel"] as const;
+    inputs.forEach((name) => window.addEventListener(name, onInput, { passive: true }));
 
     return () => {
       cancelled = true;
       running.forEach((controls) => controls.stop());
-      window.removeEventListener("keydown", finish);
-      window.removeEventListener("pointerdown", finish);
-      window.removeEventListener("wheel", finish);
+      inputs.forEach((name) => window.removeEventListener(name, onInput));
     };
   }, [skip, target, elev, draw, riseY, stageX, stageY, stageScale, markDraw, loaderOpacity, pageOpacity]);
 

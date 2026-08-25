@@ -1,4 +1,4 @@
-import { motion, type MotionValue } from "motion/react";
+import { motion, type MotionStyle, type MotionValue } from "motion/react";
 import type { ReactNode } from "react";
 import { EIGHT_D } from "../lib/eight";
 
@@ -36,13 +36,18 @@ type Props = {
   behind?: ReactNode;
   /** Clips whatever is behind the mark. */
   defs?: ReactNode;
+  /** Applied to the word only. A clip here must never wrap the mark, whose
+   *  contents deliberately overflow their box. */
+  textStyle?: MotionStyle;
   className?: string;
 };
 
-export function Wordmark({ draw, behind, defs, className }: Props) {
+export function Wordmark({ draw, behind, defs, textStyle, className }: Props) {
   return (
     <span className={`wordmark-inner${className ? ` ${className}` : ""}`}>
-      Elev
+      <motion.span className="wordmark-text" style={textStyle}>
+        Elev
+      </motion.span>
       <svg className="wordmark-eight" viewBox={WORDMARK_VIEW_BOX} fill="none" role="img" aria-label="8">
         {defs}
         {behind}

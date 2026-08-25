@@ -30,7 +30,7 @@ const CROWN = -10;
  * of it. Sized off the sprite alone she comes out a speck; this is scaled so her
  * body reads at roughly the mark's own width.
  */
-const EL = { w: 58, h: 58 * (462 / 608) };
+const EL = { w: 74, h: 74 * (462 / 608) };
 const EL_X = 60 - EL.w / 2;
 const EL_Y = CROWN - EL.h;
 
@@ -49,32 +49,31 @@ export function Loader({ elev, draw, riseY }: Props) {
 
   return (
     <div className="loader-lockup">
-      <motion.span className="loader-elev-mask" style={{ clipPath }}>
-        <Wordmark
-          draw={draw}
-          defs={
-            <clipPath id="loader-loop-clip">
-              {/* Nothing of her shows below the crown, so she reads as being
-                  inside the mark until she climbs out of the top of it. */}
-              <rect x={EL_X} y={-110} width={EL.w} height={110 + CROWN} />
-            </clipPath>
-          }
-          behind={
-            /* Painted before the mark, so the crown crosses in front of her
-               and she reads as coming up from inside it. */
-            <g clipPath="url(#loader-loop-clip)">
-              <motion.image
-                href={riseSrc}
-                x={EL_X}
-                y={EL_Y}
-                width={EL.w}
-                height={EL.h}
-                style={{ y: riseY }}
-              />
-            </g>
-          }
-        />
-      </motion.span>
+      <Wordmark
+        textStyle={{ clipPath }}
+        draw={draw}
+        defs={
+          <clipPath id="loader-loop-clip">
+            {/* Nothing of her shows below the crown, so she reads as being
+                inside the mark until she climbs out of the top of it. */}
+            <rect x={EL_X} y={-110} width={EL.w} height={110 + CROWN} />
+          </clipPath>
+        }
+        behind={
+          /* Painted before the mark, so the crown crosses in front of her
+             and she reads as coming up from inside it. */
+          <g clipPath="url(#loader-loop-clip)">
+            <motion.image
+              href={riseSrc}
+              x={EL_X}
+              y={EL_Y}
+              width={EL.w}
+              height={EL.h}
+              style={{ y: riseY }}
+            />
+          </g>
+        }
+      />
     </div>
   );
 }
