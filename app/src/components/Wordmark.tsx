@@ -1,6 +1,7 @@
 import { motion, type MotionStyle, type MotionValue } from "motion/react";
 import type { ReactNode } from "react";
 import { EIGHT_D } from "../lib/eight";
+import { ENTER } from "../lib/motion";
 
 /**
  * "Elev" plus the 8 drawn as El's own line, coiled.
@@ -32,6 +33,8 @@ export const UPRIGHT = "rotate(90 60 30)";
 type Props = {
   /** Traces the mark on. Omit for a static logotype. */
   draw?: MotionValue<number>;
+  /** Traces the mark once, the first time it scrolls into view. */
+  reveal?: boolean;
   /** Rendered inside the mark, behind it, so it reads as coming through the loop. */
   behind?: ReactNode;
   /** Clips whatever is behind the mark. */
@@ -42,7 +45,7 @@ type Props = {
   className?: string;
 };
 
-export function Wordmark({ draw, behind, defs, textStyle, className }: Props) {
+export function Wordmark({ draw, reveal, behind, defs, textStyle, className }: Props) {
   return (
     <span className={`wordmark-inner${className ? ` ${className}` : ""}`}>
       <motion.span className="wordmark-text" style={textStyle}>
@@ -59,6 +62,14 @@ export function Wordmark({ draw, behind, defs, textStyle, className }: Props) {
           strokeLinecap="round"
           strokeLinejoin="round"
           style={draw ? { pathLength: draw } : undefined}
+          {...(reveal
+            ? {
+                initial: { pathLength: 0 },
+                whileInView: { pathLength: 1 },
+                viewport: { once: true, amount: 0.6 },
+                transition: { duration: 1.1, ease: ENTER, delay: 0.15 },
+              }
+            : {})}
         />
       </svg>
     </span>

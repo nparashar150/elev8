@@ -12,6 +12,7 @@ import { Expand } from "./Expand";
 import { Hole } from "./Hole";
 import { StackCard } from "./StackCard";
 import { Verticals } from "./Verticals";
+import { Wordmark } from "./Wordmark";
 import { Voices } from "./Voices";
 
 type Props = {
@@ -273,7 +274,11 @@ export function Story({ intro, reduced }: Props) {
               <br />
               And note that this is only the rough sketch.
             </p>
-            <h2>Give us the brand and we’ll elevate Elev8.</h2>
+            {/* The mark signs itself one last time, in the brand red. Same
+                component as the loader and the nav, so it cannot drift. */}
+            <h2>
+              Give us the brand and we’ll elevate <Wordmark reveal className="wordmark-accent" />.
+            </h2>
             <Button
               size="lg"
               className="cta"

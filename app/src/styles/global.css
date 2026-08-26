@@ -614,6 +614,11 @@ h2 {
   text-align: center;
 }
 
+/* The wordmark set inline in a headline, in the primary colour. */
+.wordmark-accent {
+  color: var(--kalava);
+}
+
 /* Conversational, sitting above the ask rather than competing with it. */
 .close-note {
   margin: 0 0 clamp(18px, 2.6vh, 30px);
