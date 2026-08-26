@@ -22,11 +22,11 @@ type Props = {
 /** Card order, so the nav can take the colour of whichever card is on top. */
 export const DECK_TONES = [
   "cream",
+  "know",
   "cream",
   "kalava",
   "clear",
   "fuel",
-  "know",
   "long",
   "plum",
   "look",
@@ -52,7 +52,7 @@ const PHASES: [string, string][] = [
 
 const KIT: [string, string][] = [
   ["Colour", "One saturated red. One job."],
-  ["Type", "A 96px headline and a 24px diagnosis. One face."],
+  ["Type", "Confident at 96px. Still warm at 24, right next to a diagnosis."],
   ["El", "Drawn from the logo, not bolted onto it."],
   ["Motion", "Everything draws in. Nothing pops."],
 ];
@@ -156,45 +156,9 @@ export function Story({ intro, reduced }: Props) {
       </StackCard>
 
       <StackCard>
-        <Block id="elevate" tone="cream" kicker="Six panels. A different door.">
-          <h2>What are you trying to elevate?</h2>
-          <Verticals />
-        </Block>
-      </StackCard>
-
-      <StackCard>
-        <Block id="honest" tone="kalava" kicker="Where we start" watermark="move">
-          <h2>You already said it.</h2>
-          <p className="line">
-            <em>“Elevate your life.”</em> Best line on your site. Buried under four database statistics.
-          </p>
-          <p className="pull">Elev8 isn’t a new idea. It’s yours, with a face.</p>
-        </Block>
-      </StackCard>
-
-      <StackCard>
-        <Block id="problem" tone="clear" kicker="The brand problem" watermark="clear">
-          <h2>Exclusive, or inclusive.</h2>
-          <p className="pull pull-muted">We don’t pick.</p>
-          <p className="pull">Your baseline is yours alone. The wish to rise is everyone’s.</p>
-          <Expand label="why that works">
-            Exclusive because it’s n=1. Nobody else has your data, so nobody else can be sold your plan. Inclusive
-            because everyone has a baseline, and every baseline is a legitimate place to start.
-          </Expand>
-        </Block>
-      </StackCard>
-
-      <StackCard>
-        <Block id="voice" tone="fuel" kicker="Same science" watermark="fuel">
-          <h2>Different sentence.</h2>
-          <Voices />
-        </Block>
-      </StackCard>
-
-      <StackCard>
         <Block id="el" tone="know" kicker="The character">
           <h2>Meet El.</h2>
-          <p className="line">She’s the 8 in your logo, stepped out.</p>
+          <p className="line">She’s the 8 in your logo. Stepped out to say hello.</p>
           {/* Rabbit by rabbit: each pose rises out of its own hole in turn. */}
           <motion.ul
             className="poses"
@@ -227,8 +191,45 @@ export function Story({ intro, reduced }: Props) {
       </StackCard>
 
       <StackCard>
+        <Block id="elevate" tone="cream" kicker="Six panels. A different door.">
+          <h2>What are you trying to elevate?</h2>
+          <Verticals />
+        </Block>
+      </StackCard>
+
+      <StackCard>
+        <Block id="honest" tone="kalava" kicker="Where we start" watermark="move">
+          <h2>You already said it.</h2>
+          <p className="line">
+            <em>“Elevate your life.”</em> Already there. Already the best line on the page. Buried under four
+            database stats and a panel called <em>Endocrinology &amp; Metabolism</em>.
+          </p>
+          <p className="pull">Elev8 isn’t a new idea. It’s the one you already wrote. We just gave it a face.</p>
+        </Block>
+      </StackCard>
+
+      <StackCard>
+        <Block id="problem" tone="clear" kicker="The brand problem" watermark="clear">
+          <h2>Exclusive, or inclusive.</h2>
+          <p className="pull pull-muted">We don’t pick.</p>
+          <p className="pull">Your baseline is yours alone. The wish to rise is everyone’s.</p>
+          <Expand label="the reasoning">
+            Exclusive because it’s n=1. Nobody else has your data, so nobody else can be sold your plan. Inclusive
+            because everyone has a baseline, and every baseline is a legitimate place to start.
+          </Expand>
+        </Block>
+      </StackCard>
+
+      <StackCard>
+        <Block id="voice" tone="fuel" kicker="Same science" watermark="fuel">
+          <h2>Different sentence.</h2>
+          <Voices />
+        </Block>
+      </StackCard>
+
+      <StackCard>
         <Block id="kit" tone="long" kicker="The kit" watermark="long">
-          <h2>A brand you can hand to anyone.</h2>
+          <h2>The brand breakdown for Elev8.</h2>
           <ul className="palette">
             {PALETTE.map(([hex, name]) => (
               <li key={hex}>
@@ -259,15 +260,16 @@ export function Story({ intro, reduced }: Props) {
         <Block id="run" tone="look" kicker="How we’d run it" watermark="look">
           <h2>Five phases. One line.</h2>
           <Numbered items={PHASES} />
-          <p className="line">Phase 3 is where a mascot becomes a reason to renew.</p>
+          <p className="line">Phase 3 is where a mascot stops being a logo and starts being a reason to renew.</p>
         </Block>
       </StackCard>
 
       <StackCard last>
         <Block id="close" tone="cream">
           <div className="close">
-            <h2>Chandra, this took a couple of days.</h2>
-            <p className="lede">Give us the brand and we’ll give you the rest.</p>
+            <h2>Hey Chandra, this took us 3 days to put everything together.</h2>
+            <p className="line">And note that this is only the rough sketch.</p>
+            <p className="lede">Give us the brand and we’ll elevate Elev8.</p>
             <Button
               size="lg"
               className="cta"
