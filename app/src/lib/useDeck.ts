@@ -1,14 +1,26 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 /**
  * Deck behaviour for the stacked cards.
  *
- * The hero shows an arrow-key hint, so the arrow keys have to actually work.
+ * One source of truth for moving between cards: the arrow keys, the hero's
+ * "start reading" cue and the corner control all go through goTo, so they
+ * cannot disagree about where the next card is.
+ *
  * Also reports which card is on top, so the nav can take that card's text
  * colour instead of relying on a blend mode to guess.
  */
 export function useDeck() {
   const [active, setActive] = useState(0);
+  const [count, setCount] = useState(0);
+
+  const goTo = useCallback((index: number) => {
+    const slots = Array.from(document.querySelectorAll<HTMLElement>(".stack-slot"));
+    const target = slots[Math.max(0, Math.min(slots.length - 1, index))];
+    // The slot holds the layout position; a sticky card's offsetTop is wherever
+    // it is currently stuck, which is not where it lives.
+    if (target) window.scrollTo({ top: target.offsetTop, behavior: "smooth" });
+  }, []);
 
   useEffect(() => {
     const slots = () => Array.from(document.querySelectorAll<HTMLElement>(".stack-slot"));
@@ -21,12 +33,7 @@ export function useDeck() {
         if (card.getBoundingClientRect().top <= 1) index = i;
       });
       setActive((previous) => (previous === index ? previous : index));
-    };
-
-    const goTo = (index: number) => {
-      const list = slots();
-      const target = list[Math.max(0, Math.min(list.length - 1, index))];
-      if (target) window.scrollTo({ top: target.offsetTop, behavior: "smooth" });
+      setCount((previous) => (previous === list.length ? previous : list.length));
     };
 
     const onKey = (event: KeyboardEvent) => {
@@ -58,5 +65,5 @@ export function useDeck() {
     };
   }, [active]);
 
-  return active;
+  return { active, count, goTo };
 }
