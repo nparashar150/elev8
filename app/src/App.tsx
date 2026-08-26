@@ -62,11 +62,6 @@ export default function App() {
         <a className="wordmark" href="#hero" ref={wordmarkRef}>
           <Wordmark draw={intro.markDraw} />
         </a>
-        {/* Scrolls to the close rather than firing a mailto, which from a nav
-            reads as nothing happening. The button down there is the real one. */}
-        <a className="nav-cta" href="#close">
-          Let’s talk
-        </a>
       </motion.header>
 
       <Story intro={intro} reduced={reduced} />

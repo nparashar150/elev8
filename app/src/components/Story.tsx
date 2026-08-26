@@ -1,4 +1,4 @@
-import { Button, Chip, ColorSwatch, Kbd } from "@heroui/react";
+import { Chip, ColorSwatch, Kbd } from "@heroui/react";
 import { motion } from "motion/react";
 import { useEffect } from "react";
 import closeSrc from "../assets/el-rise.png";
@@ -329,16 +329,6 @@ export function Story({ intro, reduced }: Props) {
               <h2>
                 Give us the brand and we’ll <ElevateMark />
               </h2>
-              <Button
-                size="lg"
-                className="cta"
-                onPress={() => {
-                  window.location.href =
-                    "mailto:hello@02100.studio?subject=Elev8";
-                }}
-              >
-                Let’s talk →
-              </Button>
               {/* One last rise to close it out. */}
               <Hole width="min(240px, 52vw)">
                 <img className="el-png el-idle" src={closeSrc} alt="" />
