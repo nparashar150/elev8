@@ -8,11 +8,11 @@ import { useDeck } from "../lib/useDeck";
 import type { useIntro } from "../lib/useIntro";
 import { Block, TONES } from "./Block";
 import { EL_POSES, EL_SRC } from "./El";
+import { ElevateMark } from "./ElevateMark";
 import { Expand } from "./Expand";
 import { Hole } from "./Hole";
 import { StackCard } from "./StackCard";
 import { Verticals } from "./Verticals";
-import { Wordmark } from "./Wordmark";
 import { Voices } from "./Voices";
 
 type Props = {
@@ -274,10 +274,9 @@ export function Story({ intro, reduced }: Props) {
               <br />
               And note that this is only the rough sketch.
             </p>
-            {/* The mark signs itself one last time, in the brand red. Same
-                component as the loader and the nav, so it cannot drift. */}
+            {/* The last word performs the pun: elevate becomes Elev8. */}
             <h2>
-              Give us the brand and we’ll elevate <Wordmark reveal className="wordmark-accent" />.
+              Give us the brand and we’ll <ElevateMark />.
             </h2>
             <Button
               size="lg"

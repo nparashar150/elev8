@@ -619,6 +619,12 @@ h2 {
   color: var(--kalava);
 }
 
+/* Holds the swap so the sentence reflows around it instead of snapping. */
+.elevate-mark {
+  display: inline-flex;
+  vertical-align: baseline;
+}
+
 /* Conversational, sitting above the ask rather than competing with it. */
 .close-note {
   margin: 0 0 clamp(18px, 2.6vh, 30px);
