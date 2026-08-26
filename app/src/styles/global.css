@@ -614,6 +614,19 @@ h2 {
   text-align: center;
 }
 
+/* Conversational, sitting above the ask rather than competing with it. */
+.close-note {
+  margin: 0 0 clamp(18px, 2.6vh, 30px);
+  font-size: clamp(15px, 1.3vw, 18px);
+  line-height: 1.5;
+  color: var(--on-muted);
+}
+
+.panel-close h2,
+.close h2 {
+  max-width: 18ch;
+}
+
 .close-el {
   width: min(260px, 46vw);
   margin-bottom: 12px;

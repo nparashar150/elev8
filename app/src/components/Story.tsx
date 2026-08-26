@@ -267,9 +267,13 @@ export function Story({ intro, reduced }: Props) {
       <StackCard last>
         <Block id="close" tone="cream">
           <div className="close">
-            <h2>Hey Chandra, this took us 3 days to put everything together.</h2>
-            <p className="line">And note that this is only the rough sketch.</p>
-            <p className="lede">Give us the brand and we’ll elevate Elev8.</p>
+            {/* The aside is the aside. The ask is the headline. */}
+            <p className="close-note">
+              Hey Chandra, this took us 3 days to put everything together.
+              <br />
+              And note that this is only the rough sketch.
+            </p>
+            <h2>Give us the brand and we’ll elevate Elev8.</h2>
             <Button
               size="lg"
               className="cta"
