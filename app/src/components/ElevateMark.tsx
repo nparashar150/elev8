@@ -41,7 +41,7 @@ export function ElevateMark() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.34, ease: ENTER }}
           >
-            <Wordmark reveal={!reduced} pulse={!reduced} />
+            <Wordmark reveal={!reduced} shine={!reduced} />
           </motion.span>
         ) : (
           <motion.span key="word" exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.24, ease: ENTER }}>

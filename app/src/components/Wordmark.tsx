@@ -1,7 +1,7 @@
-import { motion, type MotionStyle, type MotionValue } from "motion/react";
-import type { ReactNode } from "react";
+import { animate, motion, useMotionValue, useTransform, type MotionStyle, type MotionValue } from "motion/react";
+import { useEffect, useId, type ReactNode } from "react";
 import { EIGHT_D } from "../lib/eight";
-import { ENTER } from "../lib/motion";
+import { ENTER, SETTLE } from "../lib/motion";
 
 /**
  * "Elev" plus the 8 drawn as El's own line, coiled.
@@ -27,9 +27,6 @@ export const WORDMARK_VIEW_BOX = "34 -27 52 114";
  */
 export const WORDMARK_STROKE = 15;
 
-/** One full lap of the loop, in the path's own units. */
-const LOOP_LENGTH = 252;
-
 /** Turns the flat lemniscate upright, which is what makes it read as an 8. */
 export const UPRIGHT = "rotate(90 60 30)";
 
@@ -38,8 +35,8 @@ type Props = {
   draw?: MotionValue<number>;
   /** Traces the mark once, the first time it scrolls into view. */
   reveal?: boolean;
-  /** A highlight that keeps running the loop, the way the loader's does. */
-  pulse?: boolean;
+  /** A gold gleam that sweeps the mark once, after it has drawn. */
+  shine?: boolean;
   /** Rendered inside the mark, behind it, so it reads as coming through the loop. */
   behind?: ReactNode;
   /** Clips whatever is behind the mark. */
@@ -50,19 +47,55 @@ type Props = {
   className?: string;
 };
 
-export function Wordmark({ draw, reveal, pulse, behind, defs, textStyle, className }: Props) {
+/**
+ * A gleam is a narrow bright band swept across a gradient, not a dash chasing
+ * the path. Running a dash around the loop reads as a worm crawling the mark;
+ * moving the band's stops across the stroke reads as light catching it.
+ */
+function useShine(active: boolean) {
+  const position = useMotionValue(-0.25);
+
+  useEffect(() => {
+    if (!active) return;
+    // After the mark has finished drawing itself, once, then done.
+    const controls = animate(position, 1.25, { duration: 1.05, delay: 1.35, ease: SETTLE });
+    return () => controls.stop();
+  }, [active, position]);
+
+  const band = 0.14;
+  const clamp = (value: number) => Math.max(0, Math.min(1, value));
+  return {
+    lead: useTransform(position, (value) => clamp(value - band)),
+    peak: useTransform(position, clamp),
+    tail: useTransform(position, (value) => clamp(value + band)),
+  };
+}
+
+export function Wordmark({ draw, reveal, shine, behind, defs, textStyle, className }: Props) {
+  const gradientId = useId();
+  const { lead, peak, tail } = useShine(Boolean(shine));
   return (
     <span className={`wordmark-inner${className ? ` ${className}` : ""}`}>
       <motion.span className="wordmark-text" style={textStyle}>
         Elev
       </motion.span>
       <svg className="wordmark-eight" viewBox={WORDMARK_VIEW_BOX} fill="none" role="img" aria-label="8">
+        {shine && (
+          <defs>
+            {/* Diagonal, so the band travels the mark rather than banding it. */}
+            <linearGradient id={gradientId} x1="0" y1="0" x2="0.6" y2="1">
+              <motion.stop offset={lead} stopColor="currentColor" />
+              <motion.stop offset={peak} stopColor="var(--long)" />
+              <motion.stop offset={tail} stopColor="currentColor" />
+            </linearGradient>
+          </defs>
+        )}
         {defs}
         {behind}
         <motion.path
           d={EIGHT_D}
           transform={UPRIGHT}
-          stroke="currentColor"
+          stroke={shine ? `url(#${gradientId})` : "currentColor"}
           strokeWidth={WORDMARK_STROKE}
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -77,22 +110,6 @@ export function Wordmark({ draw, reveal, pulse, behind, defs, textStyle, classNa
             : {})}
         />
 
-        {/* One unbroken line, still running. The dash is the same device the
-            loading artboards use, thinner than the ribbon so it reads as a
-            light travelling inside the mark rather than a second outline. */}
-        {pulse && (
-          <motion.path
-            d={EIGHT_D}
-            transform={UPRIGHT}
-            stroke="var(--petal)"
-            strokeWidth={WORDMARK_STROKE * 0.5}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeDasharray="40 212"
-            animate={{ strokeDashoffset: [0, -LOOP_LENGTH] }}
-            transition={{ duration: 2.6, ease: "linear", repeat: Infinity }}
-          />
-        )}
       </svg>
     </span>
   );
