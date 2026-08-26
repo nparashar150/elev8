@@ -58,7 +58,7 @@ export default function App() {
         </motion.div>
       )}
 
-      <motion.header className="nav" style={{ opacity: intro.pageOpacity }}>
+      <motion.header className="nav" style={intro.done ? { opacity: 1 } : { opacity: intro.pageOpacity }}>
         <a className="wordmark" href="#hero" ref={wordmarkRef}>
           <Wordmark draw={intro.markDraw} />
         </a>

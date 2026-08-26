@@ -125,7 +125,7 @@ export function Story({ intro, reduced }: Props) {
   return (
     <motion.main
       className="page"
-      style={{ opacity: intro.pageOpacity }}
+      style={intro.done ? { opacity: 1 } : { opacity: intro.pageOpacity }}
     >
       <StackCard>
         <Block id="hero" tone="cream" kicker="Health Centric → Elev8">

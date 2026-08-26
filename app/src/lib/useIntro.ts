@@ -92,9 +92,18 @@ export function useIntro(reducedMotion: boolean, target: RefObject<WordmarkTarge
       return controls;
     };
 
+    /*
+     * Whatever ends the loader must leave the page visible. Skipping used to
+     * unmount the loader without ever running exit(), which is what animated the
+     * page in, so a scroll during the intro left a blank screen. These are set
+     * rather than animated on purpose: if rAF is throttled, because the tab
+     * opened in the background, an animation would never arrive at all.
+     */
     const finish = () => {
       if (cancelled) return;
       cancelled = true;
+      pageOpacity.set(1);
+      loaderOpacity.set(0);
       setDone(true);
       markSeen();
     };
