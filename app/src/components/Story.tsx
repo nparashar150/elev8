@@ -276,7 +276,7 @@ export function Story({ intro, reduced }: Props) {
             </p>
             {/* The last word performs the pun: elevate becomes Elev8. */}
             <h2>
-              Give us the brand and we’ll <ElevateMark />.
+              Give us the brand and we’ll <ElevateMark />
             </h2>
             <Button
               size="lg"

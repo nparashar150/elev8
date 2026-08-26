@@ -27,6 +27,9 @@ export const WORDMARK_VIEW_BOX = "34 -27 52 114";
  */
 export const WORDMARK_STROKE = 15;
 
+/** One full lap of the loop, in the path's own units. */
+const LOOP_LENGTH = 252;
+
 /** Turns the flat lemniscate upright, which is what makes it read as an 8. */
 export const UPRIGHT = "rotate(90 60 30)";
 
@@ -35,6 +38,8 @@ type Props = {
   draw?: MotionValue<number>;
   /** Traces the mark once, the first time it scrolls into view. */
   reveal?: boolean;
+  /** A highlight that keeps running the loop, the way the loader's does. */
+  pulse?: boolean;
   /** Rendered inside the mark, behind it, so it reads as coming through the loop. */
   behind?: ReactNode;
   /** Clips whatever is behind the mark. */
@@ -45,7 +50,7 @@ type Props = {
   className?: string;
 };
 
-export function Wordmark({ draw, reveal, behind, defs, textStyle, className }: Props) {
+export function Wordmark({ draw, reveal, pulse, behind, defs, textStyle, className }: Props) {
   return (
     <span className={`wordmark-inner${className ? ` ${className}` : ""}`}>
       <motion.span className="wordmark-text" style={textStyle}>
@@ -71,6 +76,23 @@ export function Wordmark({ draw, reveal, behind, defs, textStyle, className }: P
               }
             : {})}
         />
+
+        {/* One unbroken line, still running. The dash is the same device the
+            loading artboards use, thinner than the ribbon so it reads as a
+            light travelling inside the mark rather than a second outline. */}
+        {pulse && (
+          <motion.path
+            d={EIGHT_D}
+            transform={UPRIGHT}
+            stroke="var(--petal)"
+            strokeWidth={WORDMARK_STROKE * 0.5}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeDasharray="40 212"
+            animate={{ strokeDashoffset: [0, -LOOP_LENGTH] }}
+            transition={{ duration: 2.6, ease: "linear", repeat: Infinity }}
+          />
+        )}
       </svg>
     </span>
   );
