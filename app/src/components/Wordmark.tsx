@@ -1,7 +1,7 @@
-import { animate, motion, useMotionValue, useTransform, type MotionStyle, type MotionValue } from "motion/react";
-import { useEffect, useId, type ReactNode } from "react";
+import { motion, type MotionStyle, type MotionValue } from "motion/react";
+import type { ReactNode } from "react";
 import { EIGHT_D } from "../lib/eight";
-import { ENTER, SETTLE } from "../lib/motion";
+import { ENTER } from "../lib/motion";
 
 /**
  * "Elev" plus the 8 drawn as El's own line, coiled.
@@ -35,8 +35,6 @@ type Props = {
   draw?: MotionValue<number>;
   /** Traces the mark once, the first time it scrolls into view. */
   reveal?: boolean;
-  /** A gold gleam that sweeps the mark once, after it has drawn. */
-  shine?: boolean;
   /** Rendered inside the mark, behind it, so it reads as coming through the loop. */
   behind?: ReactNode;
   /** Clips whatever is behind the mark. */
@@ -47,55 +45,19 @@ type Props = {
   className?: string;
 };
 
-/**
- * A gleam is a narrow bright band swept across a gradient, not a dash chasing
- * the path. Running a dash around the loop reads as a worm crawling the mark;
- * moving the band's stops across the stroke reads as light catching it.
- */
-function useShine(active: boolean) {
-  const position = useMotionValue(-0.25);
-
-  useEffect(() => {
-    if (!active) return;
-    // After the mark has finished drawing itself, once, then done.
-    const controls = animate(position, 1.25, { duration: 1.05, delay: 1.35, ease: SETTLE });
-    return () => controls.stop();
-  }, [active, position]);
-
-  const band = 0.14;
-  const clamp = (value: number) => Math.max(0, Math.min(1, value));
-  return {
-    lead: useTransform(position, (value) => clamp(value - band)),
-    peak: useTransform(position, clamp),
-    tail: useTransform(position, (value) => clamp(value + band)),
-  };
-}
-
-export function Wordmark({ draw, reveal, shine, behind, defs, textStyle, className }: Props) {
-  const gradientId = useId();
-  const { lead, peak, tail } = useShine(Boolean(shine));
+export function Wordmark({ draw, reveal, behind, defs, textStyle, className }: Props) {
   return (
     <span className={`wordmark-inner${className ? ` ${className}` : ""}`}>
       <motion.span className="wordmark-text" style={textStyle}>
         Elev
       </motion.span>
       <svg className="wordmark-eight" viewBox={WORDMARK_VIEW_BOX} fill="none" role="img" aria-label="8">
-        {shine && (
-          <defs>
-            {/* Diagonal, so the band travels the mark rather than banding it. */}
-            <linearGradient id={gradientId} x1="0" y1="0" x2="0.6" y2="1">
-              <motion.stop offset={lead} stopColor="currentColor" />
-              <motion.stop offset={peak} stopColor="var(--long)" />
-              <motion.stop offset={tail} stopColor="currentColor" />
-            </linearGradient>
-          </defs>
-        )}
         {defs}
         {behind}
         <motion.path
           d={EIGHT_D}
           transform={UPRIGHT}
-          stroke={shine ? `url(#${gradientId})` : "currentColor"}
+          stroke="currentColor"
           strokeWidth={WORDMARK_STROKE}
           strokeLinecap="round"
           strokeLinejoin="round"
