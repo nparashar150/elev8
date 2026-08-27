@@ -342,6 +342,9 @@ h2 {
   --on: var(--color-cream);
   --on-muted: rgb(247 241 234 / 72%);
   --rule: rgb(247 241 234 / 24%);
+  --on-soft: rgb(247 241 234 / 9%);
+  --on-soft-hover: rgb(247 241 234 / 15%);
+  --on-line: rgb(247 241 234 / 20%);
   color: var(--on);
 }
 
@@ -349,6 +352,9 @@ h2 {
   --on: var(--color-ink);
   --on-muted: rgb(28 22 20 / 66%);
   --rule: rgb(28 22 20 / 16%);
+  --on-soft: rgb(28 22 20 / 5%);
+  --on-soft-hover: rgb(28 22 20 / 9%);
+  --on-line: rgb(28 22 20 / 18%);
   color: var(--on);
 }
 
@@ -602,14 +608,6 @@ button.cue {
   to {
     transform: rotate(360deg);
   }
-}
-
-.chip-soft {
-  margin-left: 8px;
-  vertical-align: middle;
-  background: color-mix(in srgb, currentColor 14%, transparent);
-  color: inherit;
-  border: 0;
 }
 
 /*
@@ -1086,43 +1084,139 @@ button.cue {
 
 /* ---------- Lists ---------- */
 
-.numbered {
-  list-style: none;
-  margin: clamp(28px, 4vw, 44px) 0 0;
-  padding: 0;
-  max-width: 900px;
-}
+/* ---------- Scorecards ---------- */
 
-.numbered li {
+/*
+ * Six things you can count, rather than six lines you have to read. The number
+ * does the scanning, so it is set large and the copy stays quiet underneath.
+ */
+.scorecards {
   display: grid;
-  grid-template-columns: 36px 150px 1fr;
-  gap: 18px;
-  align-items: baseline;
-  padding: 15px 0;
-  border-top: 1px solid var(--rule);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(10px, 1.2vw, 16px);
+  margin: clamp(24px, 3.4vh, 40px) 0 0;
+  padding: 0;
+  list-style: none;
+  max-width: 960px;
 }
 
-.numbered li:last-child {
-  border-bottom: 1px solid var(--rule);
+/* HeroUI's .card brings its own 16px padding and surface shadow; this is a
+   tile on a coloured ground, so both are replaced rather than layered. */
+.scorecard {
+  height: 100%;
+  padding: 12px 14px 14px;
+  background: var(--on-soft);
+  border: 1px solid var(--on-line);
+  border-radius: 14px;
+  color: inherit;
+  box-shadow: none;
+  gap: 0;
 }
 
-.numbered span {
-  font-size: 12px;
+.scorecard .card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.scorecard-num {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   font-variant-numeric: tabular-nums;
-  font-weight: 500;
   color: var(--on-muted);
 }
 
-.numbered b {
-  font-size: 17px;
+.scorecard-title {
+  font-size: clamp(17px, 1.6vw, 21px);
   font-weight: 560;
   letter-spacing: -0.02em;
 }
 
-.numbered i {
-  font-style: normal;
-  font-size: var(--text-body);
+.scorecard-line {
+  font-size: 13px;
+  line-height: 1.4;
   color: var(--on-muted);
+  text-wrap: pretty;
+}
+
+/* ---------- Phase track ---------- */
+
+/*
+ * A track, not a list: the point of this fold is that the work flows, so it
+ * reads left to right along a line with the phases sitting on it.
+ */
+.track {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(10px, 1.4vw, 20px);
+  margin: clamp(28px, 4vh, 46px) 0 0;
+  padding: 0;
+  list-style: none;
+  max-width: 1000px;
+}
+
+.track li {
+  position: relative;
+  padding-top: 26px;
+}
+
+/* The line itself, drawn behind the nodes. */
+.track li::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: calc(-1 * clamp(10px, 1.4vw, 20px));
+  height: 1px;
+  background: var(--on-line);
+}
+
+.track li:last-child::before {
+  right: 0;
+}
+
+.track-node {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 1px solid var(--on-muted);
+  background: transparent;
+}
+
+.track li.is-marked .track-node {
+  background: currentColor;
+  border-color: currentColor;
+}
+
+.track-num {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--on-muted);
+}
+
+.track-title {
+  display: block;
+  margin-top: 3px;
+  font-size: clamp(16px, 1.5vw, 20px);
+  font-weight: 560;
+  letter-spacing: -0.02em;
+}
+
+.track-line {
+  display: block;
+  margin-top: 5px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--on-muted);
+  text-wrap: pretty;
 }
 
 .terse {
@@ -1166,13 +1260,31 @@ button.cue {
     grid-template-columns: 1fr;
   }
 
-  .numbered li {
-    grid-template-columns: 30px 1fr;
+  .scorecards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .numbered i {
-    grid-column: 2;
-    margin-top: 3px;
+  .track {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  /* Stacked, the line runs down the left instead of across. */
+  .track li {
+    padding: 0 0 16px 26px;
+  }
+
+  .track li::before {
+    top: 6px;
+    bottom: 0;
+    left: 6px;
+    right: auto;
+    width: 1px;
+    height: auto;
+  }
+
+  .track li:last-child::before {
+    display: none;
   }
 
   .poses {
@@ -1208,8 +1320,8 @@ button.cue {
  */
 .marks button,
 .btn,
+.scorecard,
 .switch button,
-.numbered li,
 .expand-trigger {
   transition:
     transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -1235,8 +1347,8 @@ button.cue {
 }
 
 /* List rows warm slightly under the pointer so long lists feel alive. */
-.numbered li:hover {
-  background: color-mix(in srgb, currentColor 5%, transparent);
+.scorecard:hover {
+  background: var(--on-soft-hover);
 }
 
 .expand-trigger:hover {
@@ -1270,8 +1382,7 @@ button.cue {
   .marks button,
   .btn,
   .switch button,
-  .numbered li,
-  .expand-trigger,
+    .expand-trigger,
   .fine a,
   .line a {
     transition: none;

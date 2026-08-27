@@ -1,4 +1,4 @@
-import { Chip, ColorSwatch, Kbd } from "@heroui/react";
+import { ColorSwatch, Kbd } from "@heroui/react";
 import { motion } from "motion/react";
 import { useEffect } from "react";
 import closeSrc from "../assets/el-rise.png";
@@ -13,6 +13,8 @@ import { ElAtWork } from "./ElAtWork";
 import { ElevateMark } from "./ElevateMark";
 import { Expand } from "./Expand";
 import { Hole } from "./Hole";
+import { Offer } from "./Offer";
+import { Phases } from "./Phases";
 import { StackCard } from "./StackCard";
 import { Verticals } from "./Verticals";
 import { Voices } from "./Voices";
@@ -36,23 +38,6 @@ export const DECK_TONES = [
   "look",
   "cream",
 ] as const;
-
-const OFFER: [string, string][] = [
-  ["Brand", "Positioning, naming, El, the whole system."],
-  ["Web", "Every template, home to checkout."],
-  ["App", "iOS and Android, onboarding that survives the kit."],
-  ["Backend", "APIs, consent, audit logs, India residency."],
-  ["Social", "Instagram, YouTube, LinkedIn. One voice."],
-  ["Content", "The editorial engine behind everything."],
-];
-
-const PHASES: [string, string][] = [
-  ["Identity", "Strategy, naming, El, the visual system."],
-  ["Surfaces", "Website, backend, CMS, launch."],
-  ["Product", "The app, and El inside it."],
-  ["Marketing", "Runs alongside 1 to 3, not after."],
-  ["Scale", "Content stops building up and becomes the engine."],
-];
 
 const KIT: [string, string][] = [
   ["Colour", "One saturated red. One job."],
@@ -94,27 +79,6 @@ function PoseSpinner() {
         strokeDasharray="46 36"
       />
     </svg>
-  );
-}
-
-function Numbered({ items }: { items: [string, string][] }) {
-  return (
-    <ol className="numbered">
-      {items.map(([title, copy], index) => (
-        <li key={title}>
-          <span>{String(index + 1).padStart(2, "0")}</span>
-          <b>{title}</b>
-          <i>
-            {copy}
-            {title === "Content" && (
-              <Chip className="chip-soft" size="sm">
-                <Chip.Label>recommended</Chip.Label>
-              </Chip>
-            )}
-          </i>
-        </li>
-      ))}
-    </ol>
   );
 }
 
@@ -310,14 +274,14 @@ export function Story({ intro, reduced }: Props) {
         <StackCard>
           <Block id="offer" tone="plum" kicker="What you get" watermark="know">
             <h2>Six things. One team.</h2>
-            <Numbered items={OFFER} />
+            <Offer />
           </Block>
         </StackCard>
 
         <StackCard>
           <Block id="run" tone="look" kicker="How we’d run it" watermark="look">
             <h2>Five phases. One line.</h2>
-            <Numbered items={PHASES} />
+            <Phases />
             <p className="line">
               Phase 3 is where a mascot stops being a logo and starts being a
               reason to renew.
