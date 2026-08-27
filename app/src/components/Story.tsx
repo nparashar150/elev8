@@ -9,6 +9,7 @@ import type { useIntro } from "../lib/useIntro";
 import { Block, TONES } from "./Block";
 import { DeckNav } from "./DeckNav";
 import { EL_POSES, EL_SRC } from "./El";
+import { ElAtWork } from "./ElAtWork";
 import { ElevateMark } from "./ElevateMark";
 import { Expand } from "./Expand";
 import { Hole } from "./Hole";
@@ -25,6 +26,7 @@ type Props = {
 export const DECK_TONES = [
   "cream",
   "know",
+  "plum",
   "cream",
   "kalava",
   "clear",
@@ -210,6 +212,13 @@ export function Story({ intro, reduced }: Props) {
                 </motion.li>
               ))}
             </motion.ul>
+          </Block>
+        </StackCard>
+
+        <StackCard>
+          <Block id="atwork" tone="plum" kicker="What she actually does">
+            <h2>She works for the person reading the report.</h2>
+            <ElAtWork />
           </Block>
         </StackCard>
 

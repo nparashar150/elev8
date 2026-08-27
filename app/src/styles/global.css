@@ -769,6 +769,120 @@ button.cue {
   margin-bottom: 12px;
 }
 
+/* ---------- El at work ---------- */
+
+.atwork {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+  gap: clamp(24px, 5vw, 72px);
+  align-items: center;
+  margin-top: clamp(22px, 3.4vh, 40px);
+}
+
+.atwork-copy .pull {
+  margin-top: 10px;
+}
+
+.atwork-step {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--on-muted);
+}
+
+.atwork-dots {
+  display: flex;
+  gap: 8px;
+  margin: clamp(20px, 3vh, 32px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.atwork-dots button {
+  width: 26px;
+  height: 3px;
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+  background: currentColor;
+  opacity: 0.24;
+  cursor: pointer;
+  transition: opacity 200ms ease;
+}
+
+.atwork-dots button.is-active {
+  opacity: 1;
+}
+
+/* The product surface. Cream, so it reads as the app rather than the page. */
+.atwork-frame {
+  position: relative;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  border-radius: 18px;
+  padding: clamp(20px, 2.6vw, 30px);
+  min-height: clamp(210px, 30vh, 280px);
+  display: flex;
+  align-items: flex-start;
+  box-shadow: 0 24px 60px rgb(28 22 20 / 22%);
+}
+
+.atwork-screen {
+  max-width: 30ch;
+}
+
+.screen-label {
+  margin: 0 0 10px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.screen-headline {
+  margin: 0;
+  font-size: clamp(17px, 1.5vw, 21px);
+  font-weight: 560;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.screen-was {
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--color-muted);
+}
+
+.screen-meta,
+.screen-action {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.screen-action {
+  color: var(--kalava);
+  font-weight: 500;
+}
+
+/* Her slot stays whether or not she is in it, because the last step is her
+   absence and a collapsing frame would hide the point. */
+.atwork-el {
+  position: absolute;
+  right: clamp(16px, 2vw, 26px);
+  bottom: 0;
+  width: clamp(96px, 12vw, 132px);
+}
+
+@media (max-width: 900px) {
+  .atwork {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ---------- Verticals ---------- */
 
 .marks {
