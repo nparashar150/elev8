@@ -100,6 +100,8 @@ h2 {
   font-weight: 560;
   letter-spacing: -0.04em;
   line-height: 1;
+  /* Display type is set very large here, so a ragged last line is loud. */
+  text-wrap: balance;
 }
 
 h1 {
@@ -197,12 +199,14 @@ h2 {
   z-index: 20;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  /* 24px cap + 16px gap keeps the 40px targets from meeting. */
+  gap: 16px;
   color: var(--nav-on, var(--color-ink));
   transition: color 260ms ease;
 }
 
 .deck-nav button {
+  position: relative;
   padding: 0;
   border: 0;
   background: none;
@@ -212,6 +216,17 @@ h2 {
   transition:
     opacity 180ms ease,
     transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* The key cap is 24px; the target is 40. */
+.deck-nav button::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 40px;
+  height: 40px;
+  translate: -50% -50%;
 }
 
 /* Matches .cue .kbd, but keyed off currentColor since this sits outside the
@@ -229,7 +244,7 @@ h2 {
 }
 
 .deck-nav button:active:not(:disabled) {
-  transform: translateY(0) scale(0.94);
+  transform: translateY(0) scale(0.96);
 }
 
 .deck-nav button:disabled {
@@ -355,6 +370,13 @@ h2 {
 
 .block-on-ink .lede {
   color: var(--kalava);
+}
+
+.line,
+.close-note,
+.screen-headline,
+.voice-row dd {
+  text-wrap: pretty;
 }
 
 .line {
@@ -783,8 +805,10 @@ button.cue {
   margin-top: 10px;
 }
 
+/* Steps through 01/03 in place, so the glyphs must not change width. */
 .atwork-step {
   margin: 0;
+  font-variant-numeric: tabular-nums;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.18em;
@@ -793,13 +817,16 @@ button.cue {
 
 .atwork-dots {
   display: flex;
-  gap: 8px;
+  /* 26px bar + 14px gap is a 40px pitch, so the extended hit areas below sit
+     edge to edge without ever overlapping each other. */
+  gap: 14px;
   margin: clamp(20px, 3vh, 32px) 0 0;
   padding: 0;
   list-style: none;
 }
 
 .atwork-dots button {
+  position: relative;
   width: 26px;
   height: 3px;
   padding: 0;
@@ -809,6 +836,17 @@ button.cue {
   opacity: 0.24;
   cursor: pointer;
   transition: opacity 200ms ease;
+}
+
+/* The bar is 3px tall. The thing you have to hit is not. */
+.atwork-dots button::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 40px;
+  height: 40px;
+  translate: -50% -50%;
 }
 
 .atwork-dots button.is-active {
@@ -1070,6 +1108,7 @@ button.cue {
 
 .numbered span {
   font-size: 12px;
+  font-variant-numeric: tabular-nums;
   font-weight: 500;
   color: var(--on-muted);
 }
@@ -1184,7 +1223,7 @@ button.cue {
 }
 
 .marks button:active {
-  transform: translateY(-1px) scale(0.97);
+  transform: translateY(-1px) scale(0.96);
 }
 
 .btn:hover {
@@ -1192,7 +1231,7 @@ button.cue {
 }
 
 .btn:active {
-  transform: translateY(0) scale(0.98);
+  transform: translateY(0) scale(0.96);
 }
 
 /* List rows warm slightly under the pointer so long lists feel alive. */

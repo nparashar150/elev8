@@ -15,6 +15,13 @@ import { ENTER } from "../lib/motion";
  * Every word here is the deck's own. The third beat is the one that earns her:
  * near a serious result she is absent, on purpose.
  */
+/** Chunks enter staggered and leave together, smaller than they arrived. */
+const CHUNK = {
+  enter: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: ENTER } },
+  leave: { opacity: 0, y: -4, transition: { duration: 0.18, ease: ENTER } },
+};
+
 type Step = {
   title: string;
   caption: string;
@@ -29,9 +36,9 @@ const STEPS: Step[] = [
     pose: "waiting",
     screen: (
       <>
-        <p className="screen-label">Endocrinology &amp; Metabolism</p>
-        <p className="screen-headline">Your panel is ready.</p>
-        <p className="screen-meta">12 findings · ₹25,000 panel</p>
+        <motion.p variants={CHUNK} className="screen-label">Endocrinology &amp; Metabolism</motion.p>
+        <motion.p variants={CHUNK} className="screen-headline">Your panel is ready.</motion.p>
+        <motion.p variants={CHUNK} className="screen-meta">12 findings · ₹25,000 panel</motion.p>
       </>
     ),
   },
@@ -41,13 +48,13 @@ const STEPS: Step[] = [
     pose: "neutral",
     screen: (
       <>
-        <p className="screen-label">The finding</p>
-        <p className="screen-was">
+        <motion.p variants={CHUNK} className="screen-label">The finding</motion.p>
+        <motion.p variants={CHUNK} className="screen-was">
           Gene variants influencing production of DHEA, Oxytocin, Melatonin, Cortisol
-        </p>
-        <p className="screen-headline">
+        </motion.p>
+        <motion.p variants={CHUNK} className="screen-headline">
           Four hormones decide how you sleep, stress and recover. Yours don’t behave like anyone else’s.
-        </p>
+        </motion.p>
       </>
     ),
   },
@@ -57,9 +64,9 @@ const STEPS: Step[] = [
     pose: null,
     screen: (
       <>
-        <p className="screen-label">A finding that needs a person</p>
-        <p className="screen-headline">This one we’d rather you heard from someone.</p>
-        <p className="screen-action">Talk to a genetic counsellor →</p>
+        <motion.p variants={CHUNK} className="screen-label">A finding that needs a person</motion.p>
+        <motion.p variants={CHUNK} className="screen-headline">This one we’d rather you heard from someone.</motion.p>
+        <motion.p variants={CHUNK} className="screen-action">Talk to a genetic counsellor →</motion.p>
       </>
     ),
   },
@@ -93,16 +100,20 @@ export function ElAtWork() {
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={step}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3, ease: ENTER }}
+            initial="enter"
+            animate="show"
+            exit="leave"
+            variants={{ show: { transition: { staggerChildren: 0.06 } } }}
           >
-            <p className="atwork-step">
+            <motion.p className="atwork-step" variants={CHUNK}>
               {String(step + 1).padStart(2, "0")} / {String(STEPS.length).padStart(2, "0")}
-            </p>
-            <p className="pull pull-small">{current.title}</p>
-            <p className="line">{current.caption}</p>
+            </motion.p>
+            <motion.p className="pull pull-small" variants={CHUNK}>
+              {current.title}
+            </motion.p>
+            <motion.p className="line" variants={CHUNK}>
+              {current.caption}
+            </motion.p>
           </motion.div>
         </AnimatePresence>
 
@@ -130,10 +141,10 @@ export function ElAtWork() {
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={step}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.32, ease: ENTER }}
+              initial="enter"
+              animate="show"
+              exit="leave"
+              variants={{ show: { transition: { staggerChildren: 0.05 } } }}
             >
               {current.screen}
             </motion.div>
@@ -142,7 +153,7 @@ export function ElAtWork() {
 
         {/* Her absence in the last step is the argument, so the slot stays. */}
         <div className="atwork-el">
-          <AnimatePresence>
+          <AnimatePresence initial={false}>
             {current.pose && (
               <motion.div
                 key={current.pose}
