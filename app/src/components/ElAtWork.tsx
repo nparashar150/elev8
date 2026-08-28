@@ -72,30 +72,31 @@ const STEPS: Step[] = [
   },
 ];
 
-const DWELL = 4200;
+const DWELL = 3600;
 
-export function ElAtWork() {
+export function ElAtWork({ play }: { play: boolean }) {
   const reduced = useReducedMotion() === true;
   const [step, setStep] = useState(0);
-  const [running, setRunning] = useState(false);
+  const [driving, setDriving] = useState(true);
   const timer = useRef<number | undefined>(undefined);
 
-  // Advances on its own once seen, so it plays in a room without being driven,
-  // and stops the moment anyone takes over.
+  // Runs off the deck's own signal rather than a viewport observer. Under
+  // stacked cards an observer calls this visible while it is still buried, so
+  // the sequence used to start unseen and, because it wrapped, you arrived at
+  // whichever beat it happened to be on. On a fold titled "this is what she
+  // does" that was usually beat three, the one where she is deliberately
+  // absent. It now starts at one when you get here and stops at three.
   useEffect(() => {
-    if (!running || reduced) return;
-    timer.current = window.setTimeout(() => setStep((current) => (current + 1) % STEPS.length), DWELL);
+    if (!play || !driving || reduced) return;
+    if (step >= STEPS.length - 1) return;
+    timer.current = window.setTimeout(() => setStep((current) => current + 1), DWELL);
     return () => window.clearTimeout(timer.current);
-  }, [running, reduced, step]);
+  }, [play, driving, reduced, step]);
 
   const current = STEPS[step];
 
   return (
-    <motion.div
-      className="atwork"
-      onViewportEnter={() => setRunning(true)}
-      viewport={{ once: true, amount: 0.4 }}
-    >
+    <motion.div className="atwork">
       <div className="atwork-copy">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
@@ -127,7 +128,7 @@ export function ElAtWork() {
                 className={index === step ? "is-active" : undefined}
                 onClick={() => {
                   window.clearTimeout(timer.current);
-                  setRunning(false);
+                  setDriving(false);
                   setStep(index);
                 }}
               />

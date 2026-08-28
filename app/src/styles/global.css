@@ -105,7 +105,7 @@ h2 {
 }
 
 h1 {
-  font-size: clamp(46px, 7.4vw, 104px);
+  font-size: var(--text-display);
   max-width: 12ch;
 }
 
@@ -115,7 +115,7 @@ h1 em {
 }
 
 h2 {
-  font-size: clamp(34px, 5vw, 68px);
+  font-size: var(--text-head);
   max-width: 15ch;
 }
 
@@ -300,6 +300,9 @@ h2 {
   display: flex;
   align-items: center;
   padding: clamp(80px, 9vh, 120px) clamp(20px, 6vw, 100px);
+  /* Only the kit fold changes ground, and it does so on a click. The text
+     colour flips at once because it is a legibility switch, not an effect. */
+  transition: background-color 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .block-inner {
@@ -345,6 +348,7 @@ h2 {
   --on-soft: rgb(247 241 234 / 9%);
   --on-soft-hover: rgb(247 241 234 / 15%);
   --on-line: rgb(247 241 234 / 20%);
+  --on-edge: rgb(247 241 234 / 34%);
   color: var(--on);
 }
 
@@ -355,12 +359,13 @@ h2 {
   --on-soft: rgb(28 22 20 / 5%);
   --on-soft-hover: rgb(28 22 20 / 9%);
   --on-line: rgb(28 22 20 / 18%);
+  --on-edge: rgb(28 22 20 / 32%);
   color: var(--on);
 }
 
 .kicker {
   margin: 0 0 20px;
-  font-size: 11px;
+  font-size: var(--text-micro);
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -369,7 +374,7 @@ h2 {
 
 .lede {
   margin: 20px 0 0;
-  font-size: clamp(20px, 2.1vw, 30px);
+  font-size: var(--text-pull);
   font-weight: 500;
   letter-spacing: -0.025em;
 }
@@ -385,6 +390,12 @@ h2 {
   text-wrap: pretty;
 }
 
+/* Says what you are looking at before you look at it. Every slide that showed
+   evidence without naming it read as a puzzle. */
+.lead {
+  max-width: 44ch;
+}
+
 .line {
   margin: 20px 0 0;
   font-size: var(--text-body);
@@ -392,9 +403,20 @@ h2 {
   max-width: 48ch;
 }
 
-/* One body size across every block, so nothing reads as an odd one out. */
+/* Six sizes for the whole deck, and nothing outside them.
+   Every slide gets at most a kicker, a heading, one loud line and body copy.
+   The sheet had twenty sizes before this, six of them within 3px of each
+   other, which is what made a slide read as noise rather than a hierarchy.
+
+   Where two things sit at the same size, weight and colour separate them.
+   A term is body at 560; its description is small and muted. */
 :root {
-  --text-body: clamp(16px, 1.35vw, 19px);
+  --text-micro: 11px; /* uppercase labels, numbers, eyebrows */
+  --text-small: 13px; /* secondary copy inside a component */
+  --text-body: clamp(16px, 1.35vw, 19px); /* everything you actually read */
+  --text-pull: clamp(22px, 2.4vw, 32px); /* the one loud line on a slide */
+  --text-head: clamp(34px, 5vw, 68px); /* h2 */
+  --text-display: clamp(46px, 7.4vw, 104px); /* h1, the cover only */
 }
 
 /* The cue is a control now, so it looks and behaves like one. */
@@ -445,7 +467,7 @@ button.cue {
   align-items: center;
   gap: 10px;
   margin: 30px 0 0;
-  font-size: 13px;
+  font-size: var(--text-small);
   font-weight: 500;
   letter-spacing: 0.04em;
   color: var(--on-muted);
@@ -453,7 +475,7 @@ button.cue {
 
 .pull {
   margin: 26px 0 0;
-  font-size: clamp(24px, 2.6vw, 40px);
+  font-size: var(--text-pull);
   font-weight: 560;
   letter-spacing: -0.035em;
   line-height: 1.1;
@@ -466,7 +488,7 @@ button.cue {
 
 .fine {
   margin: 26px 0 0;
-  font-size: 13px;
+  font-size: var(--text-small);
   color: var(--on-muted);
 }
 
@@ -515,67 +537,14 @@ button.cue {
   height: auto;
 }
 
-.hero-mascot {
-  position: relative;
-  display: flex;
-  justify-content: flex-end;
-}
-
 .hero-el {
+  position: relative;
   width: min(300px, 42vw);
+}
+
+.hero-el img {
   animation: el-sway 6s ease-in-out infinite, el-bob 3.4s ease-in-out infinite;
-}
-
-/*
- * Made of El: her Cream fill, her Petal line. It reads as part of the mascot
- * rather than a chat widget parked next to her.
- *
- * Anchored off her left ear, because she sits at the right edge of the hero and
- * a bubble on her right would run off the page.
- */
-.hero-bubble {
-  position: absolute;
-  right: 62%;
-  bottom: 58%;
-  z-index: 1;
-  min-width: max-content;
-  padding: 12px 16px 13px;
-  background: var(--el-fill);
-  border: 1px solid var(--petal);
-  /* 16px radius less the 12px padding keeps the tail's corner concentric. */
-  border-radius: 16px;
-  box-shadow:
-    0 1px 2px rgb(28 22 20 / 4%),
-    0 12px 28px rgb(28 22 20 / 8%);
-}
-
-.hero-bubble p {
-  margin: 0;
-  font-size: clamp(14px, 1.15vw, 16px);
-  line-height: 1.35;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-  text-wrap: pretty;
-}
-
-.hero-bubble p + p {
-  margin-top: 2px;
-  color: var(--muted);
-}
-
-/* The tail, pointing back at her ear. */
-.hero-bubble::after {
-  content: "";
-  position: absolute;
-  right: 22px;
-  bottom: -7px;
-  width: 12px;
-  height: 12px;
-  background: var(--el-fill);
-  border-right: 1px solid var(--petal);
-  border-bottom: 1px solid var(--petal);
-  rotate: 45deg;
-  border-bottom-right-radius: 3px;
+  transform-origin: 50% 94%;
 }
 
 @keyframes el-bob {
@@ -765,9 +734,18 @@ button.cue {
 .poses span {
   display: block;
   margin-top: 8px;
-  font-size: 12px;
+  font-size: var(--text-micro);
   font-weight: 500;
   color: var(--on-muted);
+}
+
+/* Six names in a row. They are a list of what exists, not a spec, so they sit
+   at body size and let the sentence under them carry the argument. */
+.rules {
+  margin: clamp(22px, 3vh, 32px) 0 0;
+  font-size: var(--text-body);
+  font-weight: 560;
+  letter-spacing: -0.01em;
 }
 
 .close {
@@ -832,7 +810,7 @@ button.cue {
 /* Conversational, sitting above the ask rather than competing with it. */
 .close-note {
   margin: 0 0 clamp(18px, 2.6vh, 30px);
-  font-size: clamp(15px, 1.3vw, 18px);
+  font-size: var(--text-body);
   line-height: 1.5;
   color: var(--on-muted);
 }
@@ -845,6 +823,161 @@ button.cue {
 .close-el {
   width: min(260px, 46vw);
   margin-bottom: 12px;
+}
+
+/* The thing itself, quoted, so the claim has an exhibit next to it. */
+.artefact {
+  margin: 22px 0 0;
+  padding: 0 0 0 18px;
+  border-left: 2px solid var(--on-line);
+  font-size: var(--text-pull);
+  font-weight: 560;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+/* The two roads, side by side, so the choice is visible before it is refused. */
+.fork {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 2.4vw, 40px);
+  margin: clamp(22px, 3vh, 34px) 0 0;
+  max-width: 760px;
+}
+
+.fork div {
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+}
+
+.fork dt {
+  font-size: var(--text-body);
+  font-weight: 560;
+  letter-spacing: -0.02em;
+}
+
+.fork dd {
+  margin: 5px 0 0;
+  font-size: var(--text-small);
+  line-height: 1.45;
+  color: var(--on-muted);
+  text-wrap: pretty;
+}
+
+@media (max-width: 900px) {
+  .fork {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+/* ---------- Deck rail ---------- */
+
+/*
+ * The running order, as ticks. Left gutter, vertically centred: the blocks pad
+ * to clamp(20px, 6vw, 100px), so it sits in space the copy was never using.
+ *
+ * Quiet by default, awake under the pointer. The rail as a whole lifts when you
+ * approach it, which is the signal that it is touchable at all, and only the
+ * tick you are actually on extends and names itself.
+ */
+.rail {
+  position: fixed;
+  left: clamp(10px, 1.6vw, 22px);
+  top: 50%;
+  translate: 0 -50%;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--nav-on, var(--color-ink));
+  transition: color 260ms ease;
+}
+
+.rail button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* The visible mark is 1px tall; the target is not. */
+.rail button::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 40px;
+  height: 40px;
+  translate: 0 -50%;
+}
+
+.rail-tick {
+  display: block;
+  width: 14px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.2;
+  transition:
+    width 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 240ms ease;
+}
+
+/* Approaching the rail wakes the whole set, before you have picked one. */
+.rail:hover .rail-tick {
+  opacity: 0.38;
+}
+
+.rail button.is-active .rail-tick,
+.rail:hover button.is-active .rail-tick {
+  width: 26px;
+  opacity: 1;
+}
+
+.rail button:hover .rail-tick,
+.rail button:focus-visible .rail-tick {
+  width: 26px;
+  opacity: 1;
+}
+
+/* The title stays out of the way until reached for. */
+.rail-label {
+  position: absolute;
+  left: 34px;
+  top: 50%;
+  white-space: nowrap;
+  font-size: var(--text-micro);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  opacity: 0;
+  pointer-events: none;
+  translate: -6px -50%;
+  transition:
+    opacity 220ms ease,
+    translate 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.rail button:hover .rail-label,
+.rail button:focus-visible .rail-label {
+  opacity: 1;
+  translate: 0 -50%;
+}
+
+@media (max-width: 900px) {
+  .rail {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rail-tick,
+  .rail-label {
+    transition: none;
+  }
 }
 
 /* ---------- El at work ---------- */
@@ -865,7 +998,7 @@ button.cue {
 .atwork-step {
   margin: 0;
   font-variant-numeric: tabular-nums;
-  font-size: 11px;
+  font-size: var(--text-micro);
   font-weight: 500;
   letter-spacing: 0.18em;
   color: var(--on-muted);
@@ -928,7 +1061,7 @@ button.cue {
 
 .screen-label {
   margin: 0 0 10px;
-  font-size: 10px;
+  font-size: var(--text-micro);
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -937,7 +1070,7 @@ button.cue {
 
 .screen-headline {
   margin: 0;
-  font-size: clamp(17px, 1.5vw, 21px);
+  font-size: var(--text-body);
   font-weight: 560;
   letter-spacing: -0.02em;
   line-height: 1.25;
@@ -945,7 +1078,7 @@ button.cue {
 
 .screen-was {
   margin: 0 0 10px;
-  font-size: 13px;
+  font-size: var(--text-small);
   line-height: 1.4;
   color: var(--color-muted);
 }
@@ -953,7 +1086,7 @@ button.cue {
 .screen-meta,
 .screen-action {
   margin: 12px 0 0;
-  font-size: 13px;
+  font-size: var(--text-small);
   color: var(--color-muted);
 }
 
@@ -995,7 +1128,7 @@ button.cue {
 .mark-label {
   display: block;
   margin-top: 10px;
-  font-size: 12px;
+  font-size: var(--text-micro);
   font-weight: 560;
   letter-spacing: 0.04em;
   color: var(--tile);
@@ -1003,6 +1136,21 @@ button.cue {
 
 .mark-tagline {
   color: var(--tile);
+}
+
+/* Six unexplained swatches read as decoration. One label turns them into the
+   first rule being demonstrated rather than asserted. */
+.palette-note {
+  margin: clamp(20px, 3vh, 30px) 0 0;
+  font-size: var(--text-micro);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--on-muted);
+}
+
+.palette-note + .palette {
+  margin-top: 12px;
 }
 
 .palette {
@@ -1016,12 +1164,67 @@ button.cue {
 
 .palette li {
   display: flex;
+}
+
+.palette button {
+  display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
-  font-weight: 500;
+  padding: 4px 6px;
+  border: 0;
+  border-radius: 12px;
+  background: none;
   color: var(--on-muted);
+  cursor: pointer;
+}
+
+.palette button:hover {
+  color: var(--on);
+}
+
+.swatch {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--tile);
+  /* Long is amber on the amber block, so the ring is what makes it a swatch
+     rather than a hole. Every swatch carries it, or the row looks uneven. */
+  box-shadow: inset 0 0 0 1px var(--on-edge);
+}
+
+.palette button[aria-pressed="true"] .swatch {
+  outline: 2px solid var(--on);
+  outline-offset: 3px;
+}
+
+.swatch-name {
+  font-size: var(--text-micro);
+  font-weight: 500;
+}
+
+.palette button[aria-pressed="true"] .swatch-name {
+  color: var(--on);
+  font-weight: 600;
+}
+
+.palette-read {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+  margin: 16px 0 0;
+  font-size: var(--text-small);
+  color: var(--on-muted);
+}
+
+.palette-read b {
+  color: var(--on);
+}
+
+.palette-hex {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
 }
 
 .marks button {
@@ -1029,22 +1232,30 @@ button.cue {
   place-items: center;
   width: auto;
   height: auto;
-  padding: 8px;
-  border: 0;
-  border-radius: 50%;
-  background: none;
+  /* 16px radius outside, 10px of padding: the mark inside sits concentric. */
+  padding: 10px 12px 8px;
+  border: 1px solid var(--on-line);
+  border-radius: 16px;
+  background: var(--on-soft);
   cursor: pointer;
-  opacity: 0.38;
-  transition: opacity 200ms ease, scale 200ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.marks button[aria-pressed="true"] {
-  opacity: 1;
-  scale: 1.12;
+  /* Only mild dimming now. The tile carries the unselected state, so the
+     marks no longer have to be faded to the point of looking switched off. */
+  opacity: 0.72;
 }
 
 .marks button:hover {
-  opacity: 0.8;
+  opacity: 0.92;
+  background: var(--on-soft-hover);
+  border-color: var(--rule);
+}
+
+/* Selection is a visible edge rather than a size change, so the row does not
+   shift under the pointer while you compare two of them. */
+.marks button[aria-pressed="true"] {
+  opacity: 1;
+  background: var(--on-soft-hover);
+  border-color: var(--tile);
+  box-shadow: inset 0 0 0 1px var(--tile);
 }
 
 .mark-copy {
@@ -1054,7 +1265,7 @@ button.cue {
 
 .mark-name {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-micro);
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -1078,7 +1289,7 @@ button.cue {
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   gap: clamp(20px, 4vw, 64px);
   padding-bottom: 12px;
-  font-size: 11px;
+  font-size: var(--text-micro);
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1104,14 +1315,14 @@ button.cue {
 
 /* The old wording is present but plainly secondary, so the eye lands right. */
 .voice-row dt {
-  font-size: 13px;
+  font-size: var(--text-small);
   line-height: 1.4;
   color: var(--on-muted);
 }
 
 .voice-row dd {
   margin: 0;
-  font-size: min(1.6vw, 2.5vh, 21px);
+  font-size: var(--text-body);
   font-weight: 560;
   line-height: 1.28;
   letter-spacing: -0.02em;
@@ -1124,17 +1335,42 @@ button.cue {
   max-width: 760px;
 }
 
+/* A pill that shrinks to its label, so the chevron sits next to the words it
+   belongs to. As a full-width row the trigger put the label at one edge of the
+   slide and its own indicator at the other, and the two stopped reading as one
+   control. Vertical padding takes it past a 40px hit area. */
 .expand-trigger {
-  display: flex;
+  display: inline-flex;
+  width: auto;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
-  font-weight: 500;
+  padding: 10px 16px;
+  border: 1px solid var(--on-line);
+  border-radius: 999px;
+  background: var(--on-soft);
+  font-size: var(--text-small);
+  font-weight: 560;
   letter-spacing: 0.04em;
   color: var(--on);
+  cursor: pointer;
+}
+
+/* HeroUI pushes the indicator to the far edge when the trigger fills its row. */
+.expand-trigger > :last-child {
+  margin-inline-start: 0;
+}
+
+.expand-trigger:hover {
+  background: var(--on-soft-hover);
+  border-color: var(--rule);
+}
+
+.expand-trigger:active {
+  transform: scale(0.96);
 }
 
 .expand-body {
+  margin-top: 14px;
   font-size: var(--text-body);
   color: var(--on-muted);
   max-width: 52ch;
@@ -1178,7 +1414,7 @@ button.cue {
 }
 
 .scorecard-num {
-  font-size: 11px;
+  font-size: var(--text-micro);
   font-weight: 600;
   letter-spacing: 0.14em;
   font-variant-numeric: tabular-nums;
@@ -1186,16 +1422,62 @@ button.cue {
 }
 
 .scorecard-title {
-  font-size: clamp(17px, 1.6vw, 21px);
+  font-size: var(--text-body);
   font-weight: 560;
   letter-spacing: -0.02em;
 }
 
 .scorecard-line {
-  font-size: 13px;
+  font-size: var(--text-small);
   line-height: 1.4;
   color: var(--on-muted);
   text-wrap: pretty;
+}
+
+/* ---------- Counts ---------- */
+
+/* Evidence, not decoration. The number is what gets read and the label only
+   explains it, so the two are far enough apart in size to be read in that
+   order without thinking about it. */
+.counts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 2.2vw, 34px);
+  margin: clamp(24px, 3.4vh, 40px) 0 0;
+  padding: 0;
+  list-style: none;
+  max-width: 820px;
+}
+
+.counts li {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+}
+
+.count-num {
+  font-size: var(--text-pull);
+  font-weight: 560;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  /* The numbers step in one at a time, so they must not shift each other. */
+  font-variant-numeric: tabular-nums;
+}
+
+.count-label {
+  font-size: var(--text-small);
+  line-height: 1.4;
+  color: var(--on-muted);
+  text-wrap: pretty;
+}
+
+@media (max-width: 900px) {
+  .counts {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
 }
 
 /* ---------- Phase track ---------- */
@@ -1219,22 +1501,23 @@ button.cue {
   padding-top: 26px;
 }
 
-/* The line itself, drawn behind the nodes. */
-.track li::before {
-  content: "";
+/* The line, drawn behind the nodes and forward from each one. */
+.track-seg {
   position: absolute;
   top: 6px;
   left: 0;
   right: calc(-1 * clamp(10px, 1.4vw, 20px));
   height: 1px;
   background: var(--on-line);
+  transform-origin: left center;
 }
 
-.track li:last-child::before {
+.track li:last-child .track-seg {
   right: 0;
 }
 
 .track-node {
+  display: block;
   position: absolute;
   top: 0;
   left: 0;
@@ -1250,9 +1533,13 @@ button.cue {
   border-color: currentColor;
 }
 
+.track-body {
+  display: block;
+}
+
 .track-num {
   display: block;
-  font-size: 10px;
+  font-size: var(--text-micro);
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -1263,7 +1550,7 @@ button.cue {
 .track-title {
   display: block;
   margin-top: 3px;
-  font-size: clamp(16px, 1.5vw, 20px);
+  font-size: var(--text-body);
   font-weight: 560;
   letter-spacing: -0.02em;
 }
@@ -1271,7 +1558,7 @@ button.cue {
 .track-line {
   display: block;
   margin-top: 5px;
-  font-size: 13px;
+  font-size: var(--text-small);
   line-height: 1.4;
   color: var(--on-muted);
   text-wrap: pretty;
@@ -1295,7 +1582,7 @@ button.cue {
 .terse dt {
   width: 78px;
   flex-shrink: 0;
-  font-size: 15px;
+  font-size: var(--text-small);
   font-weight: 560;
 }
 
@@ -1332,17 +1619,24 @@ button.cue {
     padding: 0 0 16px 26px;
   }
 
-  .track li::before {
+  .track-seg {
     top: 6px;
     bottom: 0;
     left: 6px;
     right: auto;
     width: 1px;
     height: auto;
+    transform-origin: center top;
   }
 
-  .track li:last-child::before {
+  .track li:last-child .track-seg {
     display: none;
+  }
+
+  .track-num,
+  .track-title,
+  .track-line {
+    display: block;
   }
 
   .poses {
@@ -1377,6 +1671,7 @@ button.cue {
  * lifts a little on hover and gives on press, on one easing curve.
  */
 .marks button,
+.palette button,
 .btn,
 .scorecard,
 .switch button,
@@ -1385,6 +1680,7 @@ button.cue {
     transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
     opacity 180ms ease,
     background-color 180ms ease,
+    border-color 180ms ease,
     color 180ms ease;
 }
 
@@ -1437,7 +1733,9 @@ button.cue {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .block,
   .marks button,
+  .palette button,
   .btn,
   .switch button,
     .expand-trigger,

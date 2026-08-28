@@ -38,7 +38,6 @@ type Props = {
 
 export function Block({ id, tone, kicker, watermark, children }: Props) {
   const { ground, on } = TONES[tone];
-
   return (
     <section id={id} className={`block block-on-${on}`} style={{ background: ground }}>
       <div className="block-inner">
@@ -48,7 +47,7 @@ export function Block({ id, tone, kicker, watermark, children }: Props) {
         </div>
         {watermark && (
           <div className="block-mark" aria-hidden="true">
-            <Mark id={watermark} colour="currentColor" size={520} delay={0.15} />
+            <Mark key={watermark} id={watermark} colour="currentColor" size={520} delay={0.15} />
           </div>
         )}
       </div>

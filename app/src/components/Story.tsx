@@ -1,22 +1,22 @@
-import { ColorSwatch, Kbd } from "@heroui/react";
+import { Kbd } from "@heroui/react";
 import { motion } from "motion/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import closeSrc from "../assets/el-rise.png";
+import heroSrc from "../assets/el-rise.png";
 import { ENTER } from "../lib/motion";
 import { useDeck } from "../lib/useDeck";
 import type { useIntro } from "../lib/useIntro";
 import { Block, TONES } from "./Block";
 import { DeckNav } from "./DeckNav";
+import { DeckRail } from "./DeckRail";
 import { EL_POSES, EL_SRC } from "./El";
-import { ElAtWork } from "./ElAtWork";
 import { ElevateMark } from "./ElevateMark";
-import { Expand } from "./Expand";
-import { HeroMascot } from "./HeroMascot";
 import { Hole } from "./Hole";
 import { Offer } from "./Offer";
+import { Palette } from "./Palette";
 import { Phases } from "./Phases";
 import { StackCard } from "./StackCard";
-import { Verticals } from "./Verticals";
+import { Verticals, VERTICALS } from "./Verticals";
 import { Voices } from "./Voices";
 
 type Props = {
@@ -25,35 +25,25 @@ type Props = {
 };
 
 /** Card order, so the nav can take the colour of whichever card is on top. */
-export const DECK_TONES = [
-  "cream",
-  "know",
-  "plum",
-  "cream",
-  "kalava",
-  "clear",
-  "fuel",
-  "long",
-  "plum",
-  "look",
-  "cream",
+/** The deck, in order. Drives the nav colour and the slide numbers. */
+export const DECK = [
+  { id: "hero", tone: "cream", title: "Know your baseline" },
+  { id: "honest", tone: "kalava", title: "Where the name came from" },
+  { id: "el", tone: "know", title: "This is El" },
+  { id: "elevate", tone: "cream", title: "Six reasons" },
+  { id: "problem", tone: "clear", title: "The door" },
+  { id: "voice", tone: "fuel", title: "Same science" },
+  { id: "kit", tone: "long", title: "The rules" },
+  { id: "offer", tone: "plum", title: "What you get" },
+  { id: "run", tone: "look", title: "Five phases" },
+  { id: "close", tone: "cream", title: "Scope call" },
 ] as const;
 
-const KIT: [string, string][] = [
-  ["Colour", "One saturated red. One job."],
-  ["Type", "Confident at 96px. Still warm at 24, right next to a diagnosis."],
-  ["El", "Drawn from the logo, not bolted onto it."],
-  ["Motion", "Everything draws in. Nothing pops."],
-];
+export const DECK_TONES = DECK.map((slide) => slide.tone);
 
-const PALETTE: [string, string][] = [
-  ["#C2412D", "Kalava"],
-  ["#3D458F", "Signal Blue"],
-  ["#E6B422", "Amber"],
-  ["#4F7A54", "Jade"],
-  ["#E8A79C", "Petal"],
-  ["#4A3B3F", "Warm Plum"],
-];
+/* Six names, not six explanations. The slide's point is that rules exist and
+   get handed over, and describing each one turned that into a spec sheet. */
+const KIT = ["Colour", "Type", "El", "Motion", "Voice", "Layout"];
 
 /**
  * The Waiting pose's companion mark. HeroUI's Spinner draws a gradient, which
@@ -82,9 +72,20 @@ function PoseSpinner() {
   );
 }
 
+/* The kit fold opens on its own colour, so nothing moves until someone picks. */
+const KIT_DEFAULT = "long";
+
 export function Story({ intro, reduced }: Props) {
-  const { active, count, goTo } = useDeck();
-  const tone = TONES[DECK_TONES[active] ?? "cream"];
+  const { active, revealing, count, goTo } = useDeck();
+
+  // Which door the kit fold is currently painted in. It is the one slide whose
+  // colour is not fixed, because the rule it states is "one colour per panel"
+  // and the cheapest way to prove that is to let the slide obey it.
+  const [door, setDoor] = useState<string>(KIT_DEFAULT);
+  const kit = VERTICALS.find((vertical) => vertical.id === door) ?? VERTICALS[1];
+
+  const toneName = DECK[active]?.id === "kit" ? kit.tone : DECK_TONES[active] ?? "cream";
+  const tone = TONES[toneName];
 
   // The nav is a sibling of <main>, not a descendant, so a variable set on the
   // page cannot reach it. It goes on the root element instead.
@@ -110,8 +111,13 @@ export function Story({ intro, reduced }: Props) {
                 </h1>
                 <p className="lede">Elevate everything.</p>
                 <p className="line">
-                  Two million genomes. So we can be precise about one.
+                  <b>Two million genomes. One baseline.</b>
+                  <br />
+                  The brand, product and system built around it.
                 </p>
+                {/* A first pass, not a finished answer. The whole deck is
+                    pitched at a scope call, and the cover has to say so. */}
+                <p className="fine">A first pass at Elev8.</p>
                 <button
                   type="button"
                   className="cue"
@@ -124,22 +130,56 @@ export function Story({ intro, reduced }: Props) {
                 </button>
               </div>
               {/*
-              She is simply here, peeking up, as the script has it: "a small
-              hole open at the lower-right, El peeking up, ears up, watching the
-              headline arrive." The rise belongs to the loader and to Meet El;
-              doing it again here made her reveal twice on a first visit and
-              wave on every reload.
-            */}
-              <HeroMascot />
+                She rises as the rewrite lands, so she is performing the change
+                rather than standing next to it. Bible SS04's test is that she
+                shows up for a reason; this is the reason, and it means the hero
+                answers "what does the mascot do" without a word of explanation.
+              */}
+              {/* She rises as the rewrite lands, so she performs the change
+                  rather than standing beside it. */}
+              <div className="hero-el">
+                <Hole width="100%">
+                  <img src={heroSrc} alt="El, the Elev8 mascot" />
+                </Hole>
+              </div>
             </div>
           </Block>
         </StackCard>
 
         <StackCard>
-          <Block id="el" tone="know" kicker="The character">
-            <h2>Meet El.</h2>
+          <Block
+            id="honest"
+            tone="kalava"
+            kicker="Where the name came from"
+            watermark="move"
+          >
+            <h2>We didn&rsquo;t invent the name.</h2>
+            <p className="line lead">Your homepage already says:</p>
+            <blockquote className="artefact">&ldquo;Elevate your life.&rdquo;</blockquote>
             <p className="line">
-              She’s the 8 in your logo. Stepped out to say hello.
+              <b>Health Centric</b> describes the company.
+              <br />
+              <b>Elev8</b> describes what the customer comes here to do.
+            </p>
+            <p className="line">
+              You already wrote the promise. We think it deserves to be the
+              brand.
+            </p>
+          </Block>
+        </StackCard>
+
+        <StackCard>
+          <Block id="el" tone="know" kicker="The character">
+            <h2>This is El.</h2>
+            <p className="line lead">
+              The 8, stepped out.
+              <br />
+              Not another generic AI mascot. Not a chatbot with a face.
+            </p>
+            <p className="line">
+              El explains. El waits. El knows when to step back.
+              <br />
+              <b>One character across the app, website and brand.</b>
             </p>
             {/* Rabbit by rabbit: each pose rises out of its own hole in turn. */}
             <motion.ul
@@ -180,40 +220,17 @@ export function Story({ intro, reduced }: Props) {
         </StackCard>
 
         <StackCard>
-          <Block id="atwork" tone="plum" kicker="What she actually does">
-            <h2>She works for the person reading the report.</h2>
-            <ElAtWork />
-          </Block>
-        </StackCard>
-
-        <StackCard>
           <Block
             id="elevate"
             tone="cream"
-            kicker="Six panels. A different door."
+            kicker="Your six panels, renamed"
           >
-            <h2>What are you trying to elevate?</h2>
+            <h2>What are you actually trying to elevate?</h2>
+            <p className="line lead">
+              Today the customer sees six medical categories. We see six reasons
+              to become better. Pick one.
+            </p>
             <Verticals />
-          </Block>
-        </StackCard>
-
-        <StackCard>
-          <Block
-            id="honest"
-            tone="kalava"
-            kicker="Where we start"
-            watermark="move"
-          >
-            <h2>You already said it.</h2>
-            <p className="line">
-              <em>“Elevate your life.”</em> Already there. Already the best line
-              on the page. Buried under four database stats and a panel called{" "}
-              <em>Endocrinology &amp; Metabolism</em>.
-            </p>
-            <p className="pull">
-              Elev8 isn’t a new idea. It’s the one you already wrote. We just
-              gave it a face.
-            </p>
           </Block>
         </StackCard>
 
@@ -221,87 +238,110 @@ export function Story({ intro, reduced }: Props) {
           <Block
             id="problem"
             tone="clear"
-            kicker="The brand problem"
+            kicker="Who it is for"
             watermark="clear"
           >
-            <h2>Exclusive, or inclusive.</h2>
-            <p className="pull pull-muted">We don’t pick.</p>
-            <p className="pull">
-              Your baseline is yours alone. The wish to rise is everyone’s.
+            <h2>The problem isn&rsquo;t the product. It&rsquo;s the door.</h2>
+            <p className="line lead">
+              Health Centric currently speaks to everyone: cancer, diabetes,
+              beauty, sport, longevity, diagnostics. When everything is for
+              everyone, <b>nothing feels like it was made for me</b>.
             </p>
-            <Expand label="the reasoning">
-              Exclusive because it’s n=1. Nobody else has your data, so nobody
-              else can be sold your plan. Inclusive because everyone has a
-              baseline, and every baseline is a legitimate place to start.
-            </Expand>
-          </Block>
-        </StackCard>
-
-        <StackCard>
-          <Block id="voice" tone="fuel" kicker="Same science" watermark="fuel">
-            <h2>Different sentence.</h2>
-            <Voices />
-          </Block>
-        </StackCard>
-
-        <StackCard>
-          <Block id="kit" tone="long" kicker="The kit" watermark="long">
-            <h2>The brand breakdown for Elev8.</h2>
-            <ul className="palette">
-              {PALETTE.map(([hex, name]) => (
-                <li key={hex}>
-                  <ColorSwatch
-                    color={hex}
-                    size="lg"
-                    colorName={name}
-                    aria-label={`${name}, ${hex}`}
-                  />
-                  <span>{name}</span>
-                </li>
-              ))}
-            </ul>
-            <dl className="terse">
-              {KIT.map(([term, copy]) => (
-                <div key={term}>
-                  <dt>{term}</dt>
-                  <dd>{copy}</dd>
-                </div>
-              ))}
+            <dl className="fork">
+              <div>
+                <dt>Too exclusive</dt>
+                <dd>Loses scale.</dd>
+              </div>
+              <div>
+                <dt>Too broad</dt>
+                <dd>Loses value.</dd>
+              </div>
             </dl>
+            <p className="pull">Elev8 sits between the two.</p>
+            <p className="line">
+              <em>
+                The result is yours alone. The desire to improve is universal.
+              </em>
+            </p>
+          </Block>
+        </StackCard>
+
+        <StackCard>
+          <Block id="voice" tone="fuel" kicker="The words on the site" watermark="fuel">
+            <h2>We don&rsquo;t need to change the science.</h2>
+            <p className="lede">
+              We need to change the way people understand it.
+            </p>
+            <Voices />
+            <p className="line">
+              Every line on the left is live on healthcentric.net today.
+              <br />
+              <b>Same test. Same price. Different reason to care.</b>
+            </p>
+          </Block>
+        </StackCard>
+
+        <StackCard>
+          <Block id="kit" tone={kit.tone} kicker="After we hand over" watermark={door}>
+            <h2>A brand shouldn&rsquo;t depend on the person who built it.</h2>
+            <p className="line lead">
+              We don&rsquo;t just hand over the logo. We hand over the rules
+              that make Elev8 <b>Elev8</b>.
+            </p>
+            <p className="palette-note">One colour per panel</p>
+            <Palette value={door} onChange={setDoor} />
+            <p className="rules">{KIT.join(" · ")}</p>
+            <p className="line">
+              So six months later, another designer doesn&rsquo;t start
+              guessing.
+            </p>
           </Block>
         </StackCard>
 
         <StackCard>
           <Block id="offer" tone="plum" kicker="What you get" watermark="know">
             <h2>Six things. One team.</h2>
-            <Offer />
+            <p className="line lead">
+              Brand. Web. App. Backend. Social. Content.
+              <br />
+              <b>One system, instead of six disconnected projects.</b>
+            </p>
+            <Offer play={DECK[revealing]?.id === "offer"} />
           </Block>
         </StackCard>
 
         <StackCard>
           <Block id="run" tone="look" kicker="How we’d run it" watermark="look">
-            <h2>Five phases. One line.</h2>
-            <Phases />
-            <p className="line">
-              Phase 3 is where a mascot stops being a logo and starts being a
-              reason to renew.
+            <h2>Five phases. One conversation at a time.</h2>
+            <p className="line lead">
+              We don&rsquo;t need to lock the entire journey today. We start
+              with the identity, build the surfaces, bring El into the product,
+              then scale what works.
             </p>
+            <Phases play={DECK[revealing]?.id === "run"} />
+            <p className="line">Every phase leaves something usable behind.</p>
           </Block>
         </StackCard>
 
         <StackCard last>
           <Block id="close" tone="cream">
             <div className="close">
-              {/* The aside is the aside. The ask is the headline. */}
+              {/* The ask is a conversation, not a signature. Asking to scope it
+                  together is the honest next step and the easier yes. */}
               <p className="close-note">
-                Hey Chandra, this took us 3 days to put everything together.
+                We&rsquo;ve spent three days turning the idea into a first
+                system.
                 <br />
-                And note that this is only the rough sketch.
+                This is still a rough sketch.
               </p>
               {/* The last word performs the pun: elevate becomes Elev8. */}
               <h2>
-                Give us the brand and we’ll <ElevateMark />
+                Let&rsquo;s scope <ElevateMark />
               </h2>
+              <p className="line">
+                Let&rsquo;s sit together, pressure-test it, and work out what we
+                build first.
+              </p>
               {/* One last rise to close it out. */}
               <Hole width="min(240px, 52vw)">
                 <img className="el-png el-idle" src={closeSrc} alt="" />
@@ -311,6 +351,7 @@ export function Story({ intro, reduced }: Props) {
         </StackCard>
       </motion.main>
 
+      <DeckRail active={active} onGo={goTo} />
       <DeckNav active={active} count={count} onGo={goTo} />
     </>
   );

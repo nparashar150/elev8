@@ -7,6 +7,9 @@ import type { ReactNode } from "react";
  * once. A wipe made you operate a slider to see it; a tab made you remember the
  * other column. Paired rows need neither: you read across, once, and the
  * hierarchy does the arguing.
+ *
+ * Three rows, not five. The first one makes the point and the other two prove
+ * it is a pattern; past that it stops being evidence and starts being a wall.
  */
 const LINES: { was: string; now: ReactNode }[] = [
   {
@@ -18,20 +21,8 @@ const LINES: { was: string; now: ReactNode }[] = [
     ),
   },
   {
-    was: "Genes influencing MODY, T2D/T1D, Insulin sensitivity with exercise",
-    now: "Find out whether exercise actually moves your blood sugar.",
-  },
-  {
     was: "Gene variants influencing production of DHEA, Oxytocin, Melatonin, Cortisol",
     now: "Four hormones decide how you sleep, stress and recover. Yours don’t behave like anyone else’s.",
-  },
-  {
-    was: "2 Million, World’s Most Advanced Genomic Bigdata",
-    now: (
-      <>
-        2 million genomes so we can be precise about <b>one.</b> Yours.
-      </>
-    ),
   },
   {
     was: "ALWAYS BE HEALTH CENTRIC",

@@ -12,6 +12,7 @@ import { useCallback, useEffect, useState } from "react";
  */
 export function useDeck() {
   const [active, setActive] = useState(0);
+  const [revealing, setRevealing] = useState(0);
   const [count, setCount] = useState(0);
 
   const goTo = useCallback((index: number) => {
@@ -28,11 +29,26 @@ export function useDeck() {
 
     const read = () => {
       const list = cards();
+      // Two thresholds, because they answer different questions.
+      //
+      // active is "which card is the nav sitting on top of", so it can only
+      // flip once that card actually reaches the top of the screen. Any earlier
+      // and the nav takes its colour while the previous card is still behind it.
+      //
+      // revealing is "which card is the reader looking at", which happens well
+      // before the card finishes arriving. Waiting for perfect alignment made
+      // sections that animate their contents sit there empty while the card was
+      // plainly on screen, and you had to scroll further to trigger them.
+      const soon = window.innerHeight * 0.25;
       let index = 0;
+      let near = 0;
       list.forEach((card, i) => {
-        if (card.getBoundingClientRect().top <= 1) index = i;
+        const top = card.getBoundingClientRect().top;
+        if (top <= 1) index = i;
+        if (top <= soon) near = i;
       });
       setActive((previous) => (previous === index ? previous : index));
+      setRevealing((previous) => (previous === near ? previous : near));
       setCount((previous) => (previous === list.length ? previous : list.length));
     };
 
@@ -65,5 +81,5 @@ export function useDeck() {
     };
   }, [active]);
 
-  return { active, count, goTo };
+  return { active, revealing, count, goTo };
 }
