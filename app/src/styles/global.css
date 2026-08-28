@@ -515,9 +515,67 @@ button.cue {
   height: auto;
 }
 
+.hero-mascot {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+}
+
 .hero-el {
   width: min(300px, 42vw);
   animation: el-sway 6s ease-in-out infinite, el-bob 3.4s ease-in-out infinite;
+}
+
+/*
+ * Made of El: her Cream fill, her Petal line. It reads as part of the mascot
+ * rather than a chat widget parked next to her.
+ *
+ * Anchored off her left ear, because she sits at the right edge of the hero and
+ * a bubble on her right would run off the page.
+ */
+.hero-bubble {
+  position: absolute;
+  right: 62%;
+  bottom: 58%;
+  z-index: 1;
+  min-width: max-content;
+  padding: 12px 16px 13px;
+  background: var(--el-fill);
+  border: 1px solid var(--petal);
+  /* 16px radius less the 12px padding keeps the tail's corner concentric. */
+  border-radius: 16px;
+  box-shadow:
+    0 1px 2px rgb(28 22 20 / 4%),
+    0 12px 28px rgb(28 22 20 / 8%);
+}
+
+.hero-bubble p {
+  margin: 0;
+  font-size: clamp(14px, 1.15vw, 16px);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+.hero-bubble p + p {
+  margin-top: 2px;
+  color: var(--muted);
+}
+
+/* The tail, pointing back at her ear. */
+.hero-bubble::after {
+  content: "";
+  position: absolute;
+  right: 22px;
+  bottom: -7px;
+  width: 12px;
+  height: 12px;
+  background: var(--el-fill);
+  border-right: 1px solid var(--petal);
+  border-bottom: 1px solid var(--petal);
+  rotate: 45deg;
+  border-bottom-right-radius: 3px;
 }
 
 @keyframes el-bob {

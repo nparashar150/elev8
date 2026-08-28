@@ -2,7 +2,6 @@ import { ColorSwatch, Kbd } from "@heroui/react";
 import { motion } from "motion/react";
 import { useEffect } from "react";
 import closeSrc from "../assets/el-rise.png";
-import heroSrc from "../assets/el/neutral.png";
 import { ENTER } from "../lib/motion";
 import { useDeck } from "../lib/useDeck";
 import type { useIntro } from "../lib/useIntro";
@@ -12,6 +11,7 @@ import { EL_POSES, EL_SRC } from "./El";
 import { ElAtWork } from "./ElAtWork";
 import { ElevateMark } from "./ElevateMark";
 import { Expand } from "./Expand";
+import { HeroMascot } from "./HeroMascot";
 import { Hole } from "./Hole";
 import { Offer } from "./Offer";
 import { Phases } from "./Phases";
@@ -130,7 +130,7 @@ export function Story({ intro, reduced }: Props) {
               doing it again here made her reveal twice on a first visit and
               wave on every reload.
             */}
-              <img className="el-png el-idle hero-el" src={heroSrc} alt="" />
+              <HeroMascot />
             </div>
           </Block>
         </StackCard>
