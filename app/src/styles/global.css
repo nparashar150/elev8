@@ -281,12 +281,19 @@ h2 {
 
 /* On a viewport too short to hold a block, stop stacking rather than clipping.
    Cards fall back to normal flow so nothing is ever unreachable. */
-@media (max-height: 640px) {
+@media (max-width: 900px), (max-height: 640px) {
   .stack-card {
     position: static;
     height: auto;
     overflow: visible;
     box-shadow: none;
+  }
+
+  /* Motion writes scale and filter inline so a covered card eases back. With
+     nothing covering anything, a shrinking card just looks broken. */
+  .stack-card-inner {
+    scale: none !important;
+    filter: none !important;
   }
 }
 
@@ -1434,6 +1441,30 @@ button.cue {
   text-wrap: pretty;
 }
 
+@media (max-width: 600px) {
+  .scorecards {
+    grid-template-columns: 1fr;
+  }
+
+  /* Four across leaves each rabbit about 80px wide. Two rows of two keeps
+     her readable as a character rather than a smudge. */
+  .poses {
+    flex-wrap: wrap;
+  }
+
+  .poses li {
+    flex: 0 0 calc(50% - 6px);
+  }
+
+  .palette {
+    gap: 12px;
+  }
+
+  .nav {
+    padding: 18px 20px;
+  }
+}
+
 /* ---------- Counts ---------- */
 
 /* Evidence, not decoration. The number is what gets read and the label only
@@ -1599,6 +1630,23 @@ button.cue {
 
   .hero .hole {
     margin-inline: auto;
+  }
+
+  /* One column means El has the full width to grow into, and she will. */
+  .hero-el {
+    max-width: 240px;
+    margin-inline: auto;
+  }
+
+  .block {
+    padding: clamp(64px, 8vh, 96px) 22px;
+  }
+
+  /* The two wordings still sit side by side, because the comparison is the
+     whole argument. Only the gutter between them gives way. */
+  .voices-heads,
+  .voice-row {
+    gap: 16px;
   }
 
   .terse {
